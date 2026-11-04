@@ -10,14 +10,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-dotnet@v4
         with:
-          node-version: '22'
-          cache: npm
-      - run: npm ci
-      - run: npm run lint
-      - run: npm run build
-      - run: npx ng test --watch=false --browsers=ChromeHeadless
+          dotnet-version: '10.0.x'
+      - name: Restore
+        run: dotnet restore WebSDD.slnx
+      - name: Build
+        run: dotnet build WebSDD.slnx -c Release --no-restore
+      - name: Test
+        run: dotnet test WebSDD.slnx -c Release --no-build
       - name: Semgrep
         uses: semgrep/semgrep-action@v1
         with:
