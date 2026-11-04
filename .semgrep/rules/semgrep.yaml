@@ -1,0 +1,21 @@
+rules:
+  - id: bustrack-ts-no-hardcoded-secret
+    languages: [typescript, javascript]
+    severity: ERROR
+    message: No hardcodear secretos en el cliente.
+    patterns:
+      - pattern: |
+          const $X = "...";
+      - metavariable-regex:
+          metavariable: $X
+          regex: (?i).*(password|secret|apikey|api_key|token).*
+  - id: bustrack-ts-insecure-http
+    languages: [typescript, javascript]
+    severity: ERROR
+    message: Usar HTTPS en produccion.
+    pattern-regex: "http://(?!localhost|127\\.0\\.0\\.1)[^\"'`]+"
+  - id: bustrack-ts-innerhtml
+    languages: [typescript, javascript]
+    severity: ERROR
+    message: Evitar innerHTML con datos no confiables.
+    pattern: $EL.innerHTML = $X;

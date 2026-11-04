@@ -1,44 +1,77 @@
----
-version: 1.0.0
-status: active
-source_of_truth: ./constitution.md
-project: BusTrack - Landing Page
-team:
-  - Fátima Ximena García González
-  - Diego Parra Cruz
-  - José De Jesús López Islas
-  - Melanie Joliee Bonilla Domínguez
-institution: Universidad Tecnológica de Tula-Tepeji
----
+# Constitución — BusTrack Landing
 
-# Constitución — BusTrack Landing Page
+> Fuente de verdad del repositorio. Versión 2.0.0 (2026-10-30). Todo cambio de arquitectura
+> exige spec y registro en `Memoria.md`.
 
-> Rector técnico del proyecto web. Ante conflicto con otro artefacto, **manda esta constitución**.
-> Filosofía madre: cada entrega de la landing page cumple con estándares de accesibilidad, seguridad y gobernanza SDD.
+## 1. Propósito
 
-## 1. Propósito y alcance
+BusTrack Landing forma parte del ecosistema BusTrack. Portal web / landing tiene como responsabilidad:
+Angular -> API central por HTTPS/REST. La API gestiona autenticación y negocio.
 
-- Página de aterrizaje y portal web institucional de BusTrack.
-- Redirección y enlaces de descarga oficial de la aplicación móvil (Google Play).
-- Publicación de Aviso de Privacidad y Términos de Manejo de Datos del Usuario vinculados con la app móvil.
-- Integración de código de seguimiento y métricas con Google Analytics.
-- Metodología SDD: toda funcionalidad o sección nueva nace de una especificación en `/specs`.
+## 2. Responsabilidades
 
-## 2. Principios no negociables
+- Mantener una responsabilidad delimitada dentro de BusTrack.
+- Consumir o exponer contratos HTTP documentados.
+- No duplicar datos ni lógica que pertenecen a otro servicio.
+- Aplicar SDD: toda funcionalidad nace de un spec aprobado.
 
-1. **Seguridad y Privacidad**:
-   - Headers de seguridad estrictos (HSTS, X-Content-Type-Options: nosniff, Frame-Options, CSP seguro para scripts de Analytics).
-   - Prohibido exponer secretos o credenciales en código fuente o repositorios (validado mediante Gitleaks).
-2. **Claridad y Transparencia Legal**:
-   - Aviso de privacidad visible, accesible y conforme a la normativa mexicana de protección de datos personales.
-3. **Calidad y Compatibilidad**:
-   - Diseño adaptable (*responsive*) para dispositivos móviles y de escritorio.
-   - Rendimiento optimizado y carga rápida de recursos estáticos.
-4. **Registro continuo**:
-   - Todo cambio de diseño, arquitectura o integración de analíticas se registra en `Memoria.md`.
+## 3. Arquitectura y tecnologías
 
-## 3. Gobernanza SDD y DevSecOps
+- **Actual:** ASP.NET Core .NET 10 Razor Pages, cookie auth, Serilog, HTTP resilience, Docker, Gitleaks, ZAP.
+- **Objetivo:** Angular + TypeScript (SPA) consumiendo la API central; estrategia de sesión pendiente de autorización.
+- Cambiar la tecnología objetivo requiere autorización explícita y un spec de migración.
 
-- Cada cambio o Pull Request debe validar el `CHECKLIST_PR.md`.
-- Reglas de seguridad SAST activas en `.semgrep/`.
-- CI configurado en `.github/workflows/` para verificación de código en cada PR.
+- Angular + TypeScript es la tecnología objetivo; Razor Pages queda como referencia funcional.
+- La landing presenta el producto, enlaces de descarga, privacidad y acceso autenticado.
+- La API central sigue siendo responsable de autenticación y lógica de negocio.
+- No se almacenan tokens en localStorage sin decisión de seguridad aprobada.
+- No se publican enlaces de tienda inexistentes.
+
+## 4. Principios de diseño
+
+- Separación de responsabilidades y dependencias dirigidas al dominio.
+- Contratos explícitos, validados y versionados.
+- Configuración por entorno y cero secretos en el repositorio.
+- Real-first: no se declara implementado lo que no existe en código o pruebas.
+- `Memoria.md` refleja el estado real, no el deseado.
+
+## 5. Seguridad
+
+CSP estricta, HSTS, cookies seguras o tokens según decisión, redirecciones locales, rate limiting y cero secretos en cliente.
+
+- Prohibido registrar tokens, contraseñas, claves o PII.
+- Los secretos viven en variables de entorno o Azure Key Vault.
+- Toda entrada externa se valida y toda salida se codifica.
+
+## 6. Calidad y pruebas
+
+- Pruebas unitarias Angular, pruebas de componentes, e2e y pruebas de seguridad.
+- Sin pruebas y evidencia de ejecución no hay terminado.
+- Los gates de CI para lint, pruebas y SAST son bloqueantes.
+- Los tests triviales no cuentan como cobertura.
+
+## 7. Convenciones
+
+- Código e identificadores en inglés; documentación y mensajes de usuario en español.
+- Formato y lint según el stack objetivo.
+- PR pequeños y trazables a un spec.
+- Prohibido `TODO` sin issue asociado.
+
+## 8. Restricciones
+
+- No rastreo GPS continuo de usuarios ni unidades.
+- No acceso directo de clientes a Cosmos DB.
+- No invención de rutas, horarios, tarifas, empresas o destinos por parte de IA.
+- No recolección de sensores sin consentimiento explícito.
+- No se declaran recursos Azure desplegados.
+
+## 9. Integración con BusTrack
+
+- Contratos transversales: `docs/contratos-integracion.md`.
+- La API central es la fuente autorizada de datos de transporte.
+- ML y GenAI son servicios internos.
+
+## 10. Gobernanza
+
+- Obligatorios: este documento, `AGENTS.md`, `Memoria.md`, `CHECKLIST_PR.md` y `specs/`.
+- Las decisiones no resueltas se registran como pendientes; no se inventan respuestas.
