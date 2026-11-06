@@ -26,6 +26,7 @@ import {
   RotateCcw,
   Zap,
 } from 'lucide-react';
+import { PwaPhysicsLab } from '../shared/components/PwaPhysicsLab';
 
 /* -------------------------------------------------------------------------- */
 /* TYPES & DATA                                                               */
@@ -1312,6 +1313,34 @@ export const LandingPage: React.FC = () => {
             </div>
           </div>
         )}
+      </section>
+
+      {/* -------------------------------------------------------------------- */}
+      {/* 4.5. LABORATORIO DE MICRO-FÍSICA & EXPERIENCIA PWA                   */}
+      {/* -------------------------------------------------------------------- */}
+      <section id="laboratorio" className="py-24 bg-[#0d1017] border-t border-neutral-800 relative overflow-hidden">
+        {/* Ambient glow */}
+        <div
+          className="pointer-events-none absolute top-1/2 left-1/2 -z-10 h-[500px] w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-20 blur-[130px] bg-red-600"
+          aria-hidden="true"
+        />
+
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-14">
+            <span className="inline-flex items-center gap-2 rounded-full border border-red-500/30 bg-red-950/40 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-rose-300">
+              <Sparkles className="h-3.5 w-3.5 text-amber-400" />
+              <span>Experiencia Táctil & Física en Vivo</span>
+            </span>
+            <h2 className="mt-4 font-display text-3xl font-extrabold sm:text-5xl text-white">
+              Laboratorio de Física & <span className="text-[#cf1b1b]">Micro-UI para PWA</span>
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl text-base text-neutral-400">
+              Prueba la tecnología detrás de BusTrack: amortiguación de resortes físicos de Hooke, morphing cúbico de contenedores dinámicos y micro-interacciones táctiles a 120 FPS.
+            </p>
+          </div>
+
+          <PwaPhysicsLab />
+        </div>
       </section>
 
       {/* -------------------------------------------------------------------- */}

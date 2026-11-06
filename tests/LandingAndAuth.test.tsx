@@ -94,6 +94,36 @@ describe('BusTrack React Portal — Landing Urban Transit Pulse y Autenticación
     ).toBeInTheDocument();
   });
 
+  it('permite interactuar con el Laboratorio de Física PWA y sus 4 pestañas', () => {
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <App />
+      </MemoryRouter>
+    );
+
+    expect(screen.getByText(/Laboratorio de Física &/i)).toBeInTheDocument();
+    expect(screen.getByText(/BusTrack Core Telemetría/i)).toBeInTheDocument();
+
+    // Alternar a Isla Dinámica
+    const islandTab = screen.getByRole('button', { name: /2. Isla Dinámica/i });
+    fireEvent.click(islandTab);
+    expect(screen.getByText(/Unidad UTTT Sincronizada/i)).toBeInTheDocument();
+
+    // Alternar a Canvas + Imán
+    const canvasTab = screen.getByRole('button', { name: /3. Canvas \+ Imán/i });
+    fireEvent.click(canvasTab);
+    expect(
+      screen.getByRole('button', { name: /botón magnético de parada/i })
+    ).toBeInTheDocument();
+
+    // Alternar a Micro-SVG
+    const microTab = screen.getByRole('button', { name: /4. Micro-SVG/i });
+    fireEvent.click(microTab);
+    expect(screen.getByText(/Sincronización de Catálogo/i)).toBeInTheDocument();
+    expect(screen.getByText(/Tarifa Dinámica/i)).toBeInTheDocument();
+    expect(screen.getByText(/Calificar Servicio/i)).toBeInTheDocument();
+  });
+
   it('permite aceptar el aviso de privacidad y telemetría', () => {
     render(
       <MemoryRouter initialEntries={['/']}>
