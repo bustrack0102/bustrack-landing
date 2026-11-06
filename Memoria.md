@@ -6,18 +6,14 @@
 
 - **Repositorio:** `bustrack0102/bustrack-landing`
 - **Tecnología actual:** React 19 + TypeScript + Vite + Tailwind CSS + Vitest + Docker.
-- **Despliegue Azure:** Contenedor en `rg-bustrack-ncus` (`northcentralus`) con CI/CD en GitHub Actions.
+- **Despliegue Azure:** Contenedor `bustrack-landing` en `rg-bustrack-ncus` (`northcentralus`) con CI/CD en GitHub Actions.
 
-## 2. Funcionalidades implementadas
+## 2. Funcionalidades implementadas (Alineadas a Specs 01–14)
 
-- Migración completa de Razor Pages (.NET) hacia SPA moderna en **React 19 + TypeScript**.
-- Landing pública completa: Hero interactivo, explorador de rutas/tarifas de `BusTrackDB` con búsqueda y filtros, demostración interactiva del asistente GenAI con guardrails, arquitectura del proyecto UTTT y tarjeta de descarga de app móvil (estado pendiente transparente conforme a Spec 08).
-- Paridad total de autenticación (`/login`, `/panel` protegido con `RequireAuth`, `/denegado`, logout con limpieza garantizada).
-- Aviso de privacidad y términos legales (`Spec 09`) detallando la ausencia de rastreo GPS personal y el conteo anónimo por visión artificial.
-- Suite de pruebas automatizadas con Vitest + React Testing Library (12 pruebas unitarias y de integración).
-
-## 3. Historial
-
-- **2026-10-29:** Estructura SDD original en ASP.NET Core Razor Pages.
-- **2026-10-30:** Auditoría documental SDD.
-- **2026-11-06:** Migración aprobada y ejecutada a **React 19 + TypeScript + Tailwind CSS**, implementación de todas las secciones públicas y corporativas, suite Vitest y despliegue continuo en Microsoft Azure.
+- **Spec 06 (Landing Pública):** Hero informativo, propuesta de valor y componente interactivo por pestañas (`tablist`/`tabpanel`) de beneficios del proyecto, sin incluir funciones operativas que pertenecen exclusivamente a la aplicación móvil.
+- **Spec 07 (Información del Proyecto):** Descripción institucional UTTT, alcance, límites (cero rastreo GPS personal, cero acceso directo a BD/IA desde el cliente) y arquitectura.
+- **Spec 08 (Enlace de Descarga):** Botón hacia Google Play Store marcado honestamente en estado pendiente mientras la app móvil concluye validación.
+- **Spec 09 (Aviso de Privacidad y Términos):** Vista `/privacidad` detallando tratamiento de datos, sensores y contacto.
+- **Spec 10 y 11 (Accesibilidad y Analítica):** Etiquetas ARIA, navegación por teclado y control de consentimiento de métricas anónimas sin PII.
+- **Specs 04, 05, 13 y 14 (Autenticación y Sesiones):** Login (`/login`), Panel protegido (`/panel`), Acceso denegado (`/denegado`) y Logout con limpieza local garantizada.
+- **Pruebas:** 12 casos de prueba automatizados con Vitest + React Testing Library.

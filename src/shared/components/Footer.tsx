@@ -17,7 +17,7 @@ export const Footer: React.FC = () => {
               </span>
             </div>
             <p className="mt-3 max-w-md text-sm leading-relaxed text-slate-400">
-              Plataforma de consulta y planificación de transporte público para la Región Tula-Tepeji. Desarrollada bajo metodología SDD + DevSecOps en la Universidad Tecnológica de Tula-Tepeji.
+              Portal informativo oficial del proyecto BusTrack — Sistema de consulta y planificación de transporte público para la Región Tula-Tepeji. Desarrollado en la Universidad Tecnológica de Tula-Tepeji bajo metodología SDD + DevSecOps.
             </p>
             <div className="mt-4 flex flex-wrap items-center gap-3 text-xs text-slate-400">
               <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-800 bg-slate-900/90 px-3 py-1">
@@ -26,34 +26,34 @@ export const Footer: React.FC = () => {
               </span>
               <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-800 bg-slate-900/90 px-3 py-1">
                 <Lock className="h-3.5 w-3.5 text-cyan-400" aria-hidden="true" />
-                IA con Grounding Verificado
+                Privacidad desde el diseño
               </span>
             </div>
           </div>
 
           <div>
             <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-200">
-              Navegación
+              Secciones del Proyecto
             </h3>
             <ul className="mt-3 space-y-2.5 text-sm">
               <li>
-                <a href="/#rutas" className="hover:text-emerald-400 transition-colors">
-                  Rutas y Tarifas Oficiales
-                </a>
-              </li>
-              <li>
-                <a href="/#asistente-ia" className="hover:text-emerald-400 transition-colors">
-                  Asistente GenAI
+                <a href="/#beneficios" className="hover:text-emerald-400 transition-colors">
+                  Propuesta de Valor y Beneficios
                 </a>
               </li>
               <li>
                 <a href="/#proyecto" className="hover:text-emerald-400 transition-colors">
-                  Arquitectura y Alcance
+                  Información del Proyecto y Equipo
+                </a>
+              </li>
+              <li>
+                <a href="/#alcance" className="hover:text-emerald-400 transition-colors">
+                  Alcance, Límites y Tecnología
                 </a>
               </li>
               <li>
                 <a href="/#descarga" className="hover:text-emerald-400 transition-colors">
-                  Aplicación Móvil Android
+                  Descarga de App Móvil (Estado)
                 </a>
               </li>
             </ul>

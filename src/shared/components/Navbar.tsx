@@ -25,15 +25,21 @@ export const Navbar: React.FC = () => {
 
   const navItems = [
     { label: 'Inicio', href: '/' },
-    { label: 'Rutas y Tarifas', href: '/#rutas' },
-    { label: 'Asistente IA', href: '/#asistente-ia' },
-    { label: 'Proyecto UTTT', href: '/#proyecto' },
+    { label: 'Beneficios', href: '/#beneficios' },
+    { label: 'El Proyecto', href: '/#proyecto' },
+    { label: 'Alcance y Tecnología', href: '/#alcance' },
     { label: 'App Móvil', href: '/#descarga' },
     { label: 'Privacidad', href: '/privacidad' },
   ];
 
   return (
     <header className="sticky top-0 z-50 border-b border-slate-800/80 bg-[#090d16]/85 backdrop-blur-xl">
+      <a
+        href="#contenido-principal"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-xl focus:bg-emerald-500 focus:px-4 focus:py-2 focus:text-xs focus:font-bold focus:text-slate-950"
+      >
+        Saltar al contenido principal
+      </a>
       <nav
         className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3.5 sm:px-6 lg:px-8"
         aria-label="Navegación principal"

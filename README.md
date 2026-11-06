@@ -1,35 +1,19 @@
-# BusTrack Landing & Portal Web — BusTrack UTTT
+# BusTrack Landing — BusTrack UTTT
 
-> Sistema Inteligente de Consulta y Planificación de Transporte Público — Universidad Tecnológica de Tula-Tepeji.
+> Portal Informativo y de Acceso Corporativo — Universidad Tecnológica de Tula-Tepeji.
 > Desarrollado bajo metodología SDD + DevSecOps con **React 19 + TypeScript + Vite + Tailwind CSS**.
 
 ## Estado actual
 
-- **Tecnología real:** React 19, TypeScript 5.7, Vite 6, React Router 7, Tailwind CSS 3, Lucide Icons, Vitest + React Testing Library, Docker (Nginx), Semgrep SAST.
-- **Implementado:**
-  - Landing pública interactiva con Hero, propuesta de valor y telemetría de ruta activa.
-  - Explorador interactivo de rutas, paradas, horarios y tarifas estudiantiles sincronizado con el catálogo de `BusTrackDB`.
-  - Simulador interactivo del Asistente IA (`bustrack-genai`) con Grounding verificado y Guardrails anti-inyección.
-  - Sección de arquitectura distribuida del proyecto UTTT y enlace transparente a la app móvil Android (Spec 08).
-  - Portal de autenticación corporativa (`/login`), guardia de rutas protegidas (`RequireAuth`), Panel Operativo (`/panel`), Aviso de Privacidad (`/privacidad`) y páginas de control (`/denegado`, `404`).
+- **Tecnología real:** React 19, TypeScript 5.7, Vite 6, React Router 7, Tailwind CSS 3, Lucide Icons, Vitest + React Testing Library, Docker, Semgrep SAST.
+- **Implementado conforme a `specs/`:**
+  - **Landing Pública (`06-landing-publica`):** Hero con propuesta de valor y sección interactiva por pestañas sobre los 3 pilares tecnológicos del proyecto.
+  - **Información del Proyecto (`07-informacion-del-proyecto`):** Descripción veraz, equipo UTTT, alcance, límites (cero rastreo GPS continuo, cero recolección de sensores sin consentimiento) y stack tecnológico.
+  - **Enlace de Descarga (`08-enlace-de-descarga`):** Tarjeta de Google Play Store con estado explícito *"Pendiente · En validación académica"*, sin publicar enlaces inexistentes.
+  - **Aviso de Privacidad y Términos (`09-aviso-de-privacidad-y-terminos`):** Página dedicada (`/privacidad`) con políticas de datos, sensores y contacto institucional.
+  - **Accesibilidad y Analítica (`10-accesibilidad`, `11-analitica-y-medicion`):** Navegación por teclado (`skip-link`, roles ARIA `tablist`/`tabpanel`), contraste WCAG y preferencia de analítica sin PII ni cookies invasivas.
+  - **Autenticación y Sesiones (`04-autenticacion`, `05-gestion-de-sesiones`, `13-endpoint-login`, `14-endpoint-logout`):** Login corporativo (`/login`), ruta protegida (`/panel`) y cierre de sesión con limpieza local garantizada.
 - **Despliegue Azure:** Azure Container Instances (`rg-bustrack-ncus` en `northcentralus`) con CI/CD automatizado en GitHub Actions.
-
-## Estructura del Proyecto
-
-```text
-src/
-  core/
-    config/env.ts           # Variables de entorno sin secretos
-    context/AuthContext.tsx # Estado de sesión reactivo y seguro
-    models/                 # Contratos tipados de Auth y Transporte
-    services/authService.ts # Cliente HTTP hacia API central (.NET 10)
-  shared/
-    components/             # Navbar, Footer, RequireAuth guard
-  pages/                    # LandingPage, LoginPage, DashboardPage, PrivacyPage, DeniedPage, NotFoundPage
-tests/
-  authService.test.ts       # Pruebas unitarias de contratos y sesión
-  LandingAndAuth.test.tsx   # Pruebas de integración de componentes, filtros y guardrails
-```
 
 ## Comandos principales
 
