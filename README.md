@@ -1,83 +1,42 @@
-# BusTrack Landing — BusTrack
+# BusTrack Landing & Portal Web — BusTrack UTTT
 
-> Sistema de consulta y planificación de transporte público — Universidad Tecnológica de Tula-Tepeji.
-> SDD + DevSecOps. Este README describe el **estado real** y la **arquitectura objetivo**.
+> Sistema Inteligente de Consulta y Planificación de Transporte Público — Universidad Tecnológica de Tula-Tepeji.
+> Desarrollado bajo metodología SDD + DevSecOps con **React 19 + TypeScript + Vite + Tailwind CSS**.
 
 ## Estado actual
 
-- **Tecnología real:** ASP.NET Core .NET 10 Razor Pages, cookie auth, Serilog, HTTP resilience, Docker, Gitleaks, ZAP.
-- **Tecnología objetivo:** Angular + TypeScript (SPA) consumiendo la API central; estrategia de sesión pendiente de autorización.
-- **Implementado:** ver lista en `Memoria.md`.
-- **No implementado:** ver pendientes en `Memoria.md`.
-- **Recursos Azure:** no desplegados; propuesta en `azure/`.
+- **Tecnología real:** React 19, TypeScript 5.7, Vite 6, React Router 7, Tailwind CSS 3, Lucide Icons, Vitest + React Testing Library, Docker (Nginx), Semgrep SAST.
+- **Implementado:**
+  - Landing pública interactiva con Hero, propuesta de valor y telemetría de ruta activa.
+  - Explorador interactivo de rutas, paradas, horarios y tarifas estudiantiles sincronizado con el catálogo de `BusTrackDB`.
+  - Simulador interactivo del Asistente IA (`bustrack-genai`) con Grounding verificado y Guardrails anti-inyección.
+  - Sección de arquitectura distribuida del proyecto UTTT y enlace transparente a la app móvil Android (Spec 08).
+  - Portal de autenticación corporativa (`/login`), guardia de rutas protegidas (`RequireAuth`), Panel Operativo (`/panel`), Aviso de Privacidad (`/privacidad`) y páginas de control (`/denegado`, `404`).
+- **Despliegue Azure:** Azure Container Instances (`rg-bustrack-ncus` en `northcentralus`) con CI/CD automatizado en GitHub Actions.
 
-## Qué hace este repositorio
-
-Angular -> API central por HTTPS/REST. La API gestiona autenticación y negocio.
-
-## Estructura
-
-```text
-src/app/{core,shared,features,pages}, src/assets, src/environments (objetivo Angular). Estructura real actual: WebSDD/{Pages,Models,Services,Middleware,Logging,wwwroot}.
-```
-
-## Gobernanza SDD
-
-| Documento | Propósito |
-|---|---|
-| `constitution.md` | Principios inalterables del repositorio. |
-| `AGENTS.md` | Instrucciones para agentes de IA. |
-| `Memoria.md` | Estado real, decisiones y deuda técnica. |
-| `CHECKLIST_PR.md` | Controles obligatorios de PR. |
-| `specs/` | Specs canónicas (`spec.md`, `plan.md`, `task.md`, `chart.md`). |
-| `docs/contratos-integracion.md` | Contratos con los demás repositorios. |
-| `.opencode/` | Agentes y skills específicos. |
-| `.semgrep/` | Reglas SAST reales. |
-| `.github/workflows/` | CI por stack. |
-
-## Specs por tarea
-
-- `specs/01-configuracion-inicial-del-proyecto/` — Configuración inicial del proyecto (Implementado).
-- `specs/02-arquitectura-base-angular/` — Arquitectura base Angular (Pendiente).
-- `specs/03-migracion-de-razor-a-angular/` — Migración de Razor Pages a Angular (Pendiente).
-- `specs/04-autenticacion/` — Autenticación en el portal (Parcial).
-- `specs/05-gestion-de-sesiones/` — Gestión de sesiones del portal (Parcial).
-- `specs/06-landing-publica/` — Landing pública (Pendiente).
-- `specs/07-informacion-del-proyecto/` — Información del proyecto (Pendiente).
-- `specs/08-enlace-de-descarga/` — Enlace de descarga a Google Play (Pendiente).
-- `specs/09-aviso-de-privacidad-y-terminos/` — Aviso de privacidad y términos (Pendiente).
-- `specs/10-accesibilidad/` — Accesibilidad del portal (Pendiente).
-- `specs/11-analitica-y-medicion/` — Analítica y medición (Pendiente).
-- `specs/12-publicacion-en-azure-static-web-apps/` — Publicación en Azure Static Web Apps (Pendiente).
-
-## Specs de endpoints
-
-- `specs-endpoints/13-endpoint-login/` — `POST /api/v1/auth/login` (Implementado en Razor).
-- `specs-endpoints/14-endpoint-logout/` — `POST /api/v1/auth/logout` (Implementado en Razor).
-- `specs-endpoints/15-endpoint-consulta-publica-de-transporte/` — `GET /api/v1/transporte/publico` (Propuesto).
-
-## CI/CD y Azure
-
-- `cicd/` — arquitectura del pipeline y gates.
-- `azure/` — arquitectura final de despliegue (propuesta).
-
-El historial de la organización anterior está en `docs/archivo-sdd/specs-anteriores/`.
-
-## Comandos
+## Estructura del Proyecto
 
 ```text
-npm ci
-npm run lint
-npm run build && npm test -- --watch=false
+src/
+  core/
+    config/env.ts           # Variables de entorno sin secretos
+    context/AuthContext.tsx # Estado de sesión reactivo y seguro
+    models/                 # Contratos tipados de Auth y Transporte
+    services/authService.ts # Cliente HTTP hacia API central (.NET 10)
+  shared/
+    components/             # Navbar, Footer, RequireAuth guard
+  pages/                    # LandingPage, LoginPage, DashboardPage, PrivacyPage, DeniedPage, NotFoundPage
+tests/
+  authService.test.ts       # Pruebas unitarias de contratos y sesión
+  LandingAndAuth.test.tsx   # Pruebas de integración de componentes, filtros y guardrails
 ```
 
-## Limitaciones y advertencias
+## Comandos principales
 
-- No se declara funcionalidad terminada sin código y pruebas.
-- El árbol está anidado `X-main/X-main`; la raíz real es la carpeta interior.
-- No hay repositorio Git local, por lo que tags/releases no son verificables.
-- No hay despliegue Azure ni recursos provisionados.
-
-## Equipo
-
-Fátima Ximena García González, Diego Parra Cruz, José de Jesús López Islas, Melanie Joliee Bonilla Domínguez.
+```bash
+npm install          # Instalar dependencias
+npm run dev          # Servidor de desarrollo local (Vite)
+npm run typecheck    # Verificación estricta de tipos TypeScript
+npm run build        # Build de producción en dist/
+npm test             # Ejecutar suite de pruebas con Vitest
+```

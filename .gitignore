@@ -1,42 +1,33 @@
-# Build
-bin/
-obj/
-publish/
-TestResults/
-coverage*.xml
-coverage*.json
+# Node / Vite / React Build
+node_modules/
+dist/
+dist-ssr/
+coverage/
+*.local
 
-# VS / VSCode
-.vs/
+# IDE
 .vscode/
-*.user
+.idea/
+.vs/
 *.suo
-
-# Secrets: appsettings real nunca en git (AGENTS §6). Solo Example + Development.
-**/appsettings.json
-!**/appsettings.Example.json
-!**/appsettings.Development.json
+*.swp
 
 # OS
 .DS_Store
 Thumbs.db
 
-# Logs y reportes generados (Serilog rolling, Stryker mutantes, carga/perf)
+# Logs & Reports
 logs/
 reports/
-StrykerOutput/
-*.nupkg
+*.log
+npm-debug.log*
 
-# Secretos materiales (además de appsettings.json ya cubierto arriba)
+# Secrets
 .env
 *.env
+!.env.example
 *.pfx
 *.key
 *.pem
-*.PublishSettings
-*.pubxml
-secrets.json
 
-# IDE extra
-.idea/
-*.swp
+*.tsbuildinfo

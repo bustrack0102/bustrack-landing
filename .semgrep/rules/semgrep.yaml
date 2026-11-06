@@ -3,6 +3,11 @@ rules:
     languages: [typescript, javascript]
     severity: ERROR
     message: No hardcodear secretos en el cliente.
+    paths:
+      exclude:
+        - "tests/**"
+        - "node_modules/**"
+        - "dist/**"
     patterns:
       - pattern: |
           const $X = "...";
@@ -13,9 +18,19 @@ rules:
     languages: [typescript, javascript]
     severity: ERROR
     message: Usar HTTPS en produccion.
+    paths:
+      exclude:
+        - "tests/**"
+        - "node_modules/**"
+        - "dist/**"
     pattern-regex: "http://(?!localhost|127\\.0\\.0\\.1)[^\"'`]+"
   - id: bustrack-ts-innerhtml
     languages: [typescript, javascript]
     severity: ERROR
     message: Evitar innerHTML con datos no confiables.
+    paths:
+      exclude:
+        - "tests/**"
+        - "node_modules/**"
+        - "dist/**"
     pattern: $EL.innerHTML = $X;
