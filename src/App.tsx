@@ -13,7 +13,7 @@ import { NotFoundPage } from './pages/NotFoundPage';
 
 export const AppRoutes: React.FC = () => {
   return (
-    <div className="flex min-h-screen flex-col bg-[#fbf9f8] text-[#1b1c1c]">
+    <div className="flex min-h-screen flex-col bg-[#0c0e12] text-neutral-100">
       <Navbar />
       <main className="flex-1">
         <Routes>

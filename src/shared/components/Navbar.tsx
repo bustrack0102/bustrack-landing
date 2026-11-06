@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Menu, X, LogIn, LogOut, LayoutDashboard, Smartphone } from 'lucide-react';
 import { useAuth } from '../../core/context/AuthContext';
@@ -6,8 +6,22 @@ import { BusTrackLogo } from './BusTrackLogo';
 
 export const Navbar: React.FC = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const { isAuthenticated, session, logout } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const currentScroll = window.scrollY;
+      if (totalScroll > 0) {
+        setScrollProgress(Math.min(100, Math.max(0, (currentScroll / totalScroll) * 100)));
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleLogout = async () => {
     await logout();
@@ -17,16 +31,29 @@ export const Navbar: React.FC = () => {
 
   const navLinks = [
     { label: 'Cómo funciona', href: '/#como-funciona' },
+    { label: 'Trayecto Vivo', href: '/#trayecto-vivo' },
+    { label: 'Simulador', href: '/#demo' },
     { label: 'Funciones', href: '/#funciones' },
-    { label: 'Demo interactiva', href: '/#demo' },
     { label: 'Arquitectura', href: '/#arquitectura' },
     { label: 'Cobertura', href: '/#cobertura' },
     { label: 'Equipo UTTT', href: '/#equipo' },
-    { label: 'Privacidad', href: '/privacidad' },
   ];
 
   return (
-    <header className="sticky top-0 z-50 border-b border-rose-100/60 glass-header">
+    <header className="sticky top-0 z-50 glass-header">
+      {/* Scroll-Driven Transit Line at Top */}
+      <div className="absolute top-0 left-0 right-0 h-1 bg-neutral-900/50 overflow-hidden">
+        <div
+          className="relative h-full bg-gradient-to-r from-[#900d0d] via-[#cf1b1b] to-amber-500 transition-all duration-150 ease-out"
+          style={{ width: `${scrollProgress}%` }}
+        >
+          {/* Glowing Bus Head at the tip of the progress bar */}
+          <div className="absolute -top-1.5 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-white shadow-md shadow-red-500/80">
+            <span className="h-2 w-2 rounded-full bg-[#cf1b1b]" />
+          </div>
+        </div>
+      </div>
+
       <a
         href="#contenido-principal"
         className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-xl focus:bg-[#cf1b1b] focus:px-4 focus:py-2 focus:text-xs focus:font-bold focus:text-white shadow-lg"
@@ -44,7 +71,7 @@ export const Navbar: React.FC = () => {
           className="group flex items-center transition-transform hover:scale-[1.02]"
           aria-label="BusTrack, ir al inicio"
         >
-          <BusTrackLogo withTagline={true} />
+          <BusTrackLogo isDark={true} withTagline={true} />
         </Link>
 
         {/* Desktop Navigation Links */}
@@ -53,7 +80,7 @@ export const Navbar: React.FC = () => {
             <a
               key={item.href}
               href={item.href}
-              className="rounded-full px-3.5 py-1.5 text-sm font-medium text-[#333333] transition-colors hover:bg-[#fff0e8] hover:text-[#cf1b1b]"
+              className="rounded-full px-3 py-1.5 text-xs font-semibold tracking-wide text-neutral-300 transition-all hover:bg-white/10 hover:text-white"
             >
               {item.label}
             </a>
@@ -66,15 +93,15 @@ export const Navbar: React.FC = () => {
             <div className="flex items-center gap-2">
               <Link
                 to="/panel"
-                className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-4 py-2 text-sm font-semibold text-[#1b1c1c] shadow-sm transition hover:border-[#cf1b1b]/40 hover:text-[#cf1b1b]"
+                className="inline-flex items-center gap-2 rounded-full border border-neutral-700 bg-neutral-800/90 px-4 py-2 text-xs font-bold text-white shadow-sm transition hover:border-[#cf1b1b] hover:text-[#cf1b1b]"
               >
-                <LayoutDashboard className="h-4 w-4 text-[#cf1b1b]" aria-hidden="true" />
+                <LayoutDashboard className="h-3.5 w-3.5 text-[#cf1b1b]" aria-hidden="true" />
                 <span>Panel ({session?.userName || 'Admin'})</span>
               </Link>
               <button
                 type="button"
                 onClick={handleLogout}
-                className="inline-flex items-center gap-1.5 rounded-full border border-transparent p-2 text-neutral-500 transition hover:bg-neutral-100 hover:text-neutral-900"
+                className="inline-flex items-center gap-1.5 rounded-full border border-transparent p-2 text-neutral-400 transition hover:bg-neutral-800 hover:text-white"
                 title="Cerrar sesión"
                 aria-label="Cerrar sesión de administrador"
               >
@@ -84,9 +111,9 @@ export const Navbar: React.FC = () => {
           ) : (
             <Link
               to="/login"
-              className="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold text-[#333333] transition hover:bg-neutral-100 hover:text-[#cf1b1b]"
+              className="inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-bold text-neutral-300 transition hover:bg-white/10 hover:text-white"
             >
-              <LogIn className="h-4 w-4" aria-hidden="true" />
+              <LogIn className="h-3.5 w-3.5" aria-hidden="true" />
               <span>Acceso</span>
             </Link>
           )}
@@ -94,9 +121,9 @@ export const Navbar: React.FC = () => {
           {/* Primary CTA: Descargar app */}
           <a
             href="/#proximamente"
-            className="inline-flex items-center gap-2 rounded-full bg-[#cf1b1b] px-5 py-2.5 text-sm font-bold text-white shadow-md shadow-red-500/20 transition-all hover:bg-[#900d0d] hover:shadow-lg hover:shadow-red-500/30 active:scale-95"
+            className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#cf1b1b] to-[#900d0d] px-4 py-2 text-xs font-bold text-white shadow-lg shadow-red-500/25 transition-all hover:shadow-red-500/40 hover:scale-105 active:scale-95"
           >
-            <Smartphone className="h-4 w-4" aria-hidden="true" />
+            <Smartphone className="h-3.5 w-3.5" aria-hidden="true" />
             <span>Descargar app</span>
           </a>
         </div>
@@ -106,41 +133,37 @@ export const Navbar: React.FC = () => {
           <button
             type="button"
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="inline-flex items-center justify-center rounded-xl p-2 text-neutral-700 hover:bg-neutral-100 hover:text-[#cf1b1b] focus:outline-none focus:ring-2 focus:ring-[#cf1b1b]"
+            className="inline-flex items-center justify-center rounded-xl p-2 text-neutral-300 hover:bg-neutral-800 hover:text-white"
             aria-expanded={mobileOpen}
             aria-label="Abrir menú de navegación"
           >
-            {mobileOpen ? (
-              <X className="h-6 w-6" aria-hidden="true" />
-            ) : (
-              <Menu className="h-6 w-6" aria-hidden="true" />
-            )}
+            {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
         </div>
       </nav>
 
-      {/* Mobile Menu Drawer */}
+      {/* Mobile Drawer */}
       {mobileOpen && (
-        <div className="border-t border-rose-100/60 bg-white/95 px-4 pt-3 pb-6 sm:hidden">
+        <div className="border-t border-neutral-800 bg-[#0c0e12]/95 px-4 pt-3 pb-6 sm:hidden backdrop-blur-xl">
           <div className="flex flex-col space-y-2">
             {navLinks.map((item) => (
               <a
                 key={item.href}
                 href={item.href}
                 onClick={() => setMobileOpen(false)}
-                className="rounded-xl px-3 py-2.5 text-base font-medium text-[#333333] hover:bg-[#fff0e8] hover:text-[#cf1b1b]"
+                className="rounded-xl px-3 py-2 text-sm font-semibold text-neutral-300 hover:bg-white/10 hover:text-white"
               >
                 {item.label}
               </a>
             ))}
 
-            <div className="pt-3 border-t border-neutral-100 flex flex-col gap-2">
+            <div className="pt-3 border-t border-neutral-800 flex flex-col gap-2">
               {isAuthenticated ? (
                 <>
                   <Link
                     to="/panel"
                     onClick={() => setMobileOpen(false)}
-                    className="flex items-center gap-2 rounded-xl bg-neutral-100 px-4 py-3 text-sm font-semibold text-neutral-900"
+                    className="flex items-center gap-2 rounded-xl bg-neutral-800 px-4 py-3 text-xs font-bold text-white"
                   >
                     <LayoutDashboard className="h-4 w-4 text-[#cf1b1b]" />
                     <span>Panel de Control ({session?.userName})</span>
@@ -148,7 +171,7 @@ export const Navbar: React.FC = () => {
                   <button
                     type="button"
                     onClick={handleLogout}
-                    className="flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold text-rose-600 hover:bg-rose-50"
+                    className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-bold text-rose-400 hover:bg-neutral-800"
                   >
                     <LogOut className="h-4 w-4" />
                     <span>Cerrar sesión</span>
@@ -158,7 +181,7 @@ export const Navbar: React.FC = () => {
                 <Link
                   to="/login"
                   onClick={() => setMobileOpen(false)}
-                  className="flex items-center gap-2 rounded-xl bg-neutral-100 px-4 py-3 text-sm font-semibold text-neutral-800 hover:text-[#cf1b1b]"
+                  className="flex items-center gap-2 rounded-xl bg-neutral-800/80 px-4 py-2.5 text-xs font-bold text-neutral-200 hover:text-white"
                 >
                   <LogIn className="h-4 w-4" />
                   <span>Acceso Corporativo</span>
@@ -168,7 +191,7 @@ export const Navbar: React.FC = () => {
               <a
                 href="/#proximamente"
                 onClick={() => setMobileOpen(false)}
-                className="flex items-center justify-center gap-2 rounded-xl bg-[#cf1b1b] px-4 py-3.5 text-sm font-bold text-white shadow-md shadow-red-500/20"
+                className="flex items-center justify-center gap-2 rounded-xl bg-[#cf1b1b] px-4 py-3 text-xs font-bold text-white shadow-md shadow-red-500/25"
               >
                 <Smartphone className="h-4 w-4" />
                 <span>Descargar app (Google Play)</span>

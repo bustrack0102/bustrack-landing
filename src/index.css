@@ -8,69 +8,147 @@
     --primary-red-dark: #900d0d;
     --peach-soft: #ffdbc5;
     --peach-tint: #fff0e8;
-    --ink-dark: #1b1c1c;
-    --canvas-bg: #fbf9f8;
+    --ink-dark: #111215;
+    --canvas-bg: #0d0f12;
   }
 
   body {
     font-family: 'Plus Jakarta Sans', 'Manrope', system-ui, -apple-system, sans-serif;
-    background-color: #fbf9f8;
-    color: #1b1c1c;
+    background-color: #0c0e12;
+    color: #f3f4f6;
     overflow-x: hidden;
   }
 }
 
-/* Glassmorphism */
+/* 3D Perspective & Transform Utilities */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.perspective-1500 {
+  perspective: 1500px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+/* Glassmorphism Classes */
+.glass-panel-dark {
+  background: rgba(22, 25, 32, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-panel-glow {
+  background: rgba(26, 29, 38, 0.82);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(207, 27, 27, 0.25);
+  box-shadow: 0 0 35px -5px rgba(207, 27, 27, 0.15);
+}
+
 .glass-header {
-  background: rgba(255, 255, 255, 0.90);
+  background: rgba(12, 14, 18, 0.85);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-.glass-card {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+/* Dynamic Glow Shadows */
+.glow-red {
+  box-shadow: 0 0 40px -8px rgba(207, 27, 27, 0.45);
 }
 
-.glass-dark {
-  background: rgba(38, 38, 38, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+.glow-emerald {
+  box-shadow: 0 0 40px -8px rgba(16, 185, 129, 0.45);
 }
 
-/* Hero animated subtle glow */
-.hero-glow {
-  background: radial-gradient(circle at 60% 30%, rgba(255, 219, 197, 0.7) 0%, rgba(255, 237, 226, 0.4) 40%, transparent 70%);
+.glow-amber {
+  box-shadow: 0 0 40px -8px rgba(245, 158, 11, 0.45);
 }
 
-/* Animated dashed path for maps and road visuals */
+.glow-card {
+  box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.7), 0 0 30px -10px rgba(207, 27, 27, 0.2);
+}
+
+/* Animated Lines & Dashes */
 @keyframes dashTravel {
   to {
-    stroke-dashoffset: -40;
+    stroke-dashoffset: -48;
   }
 }
 
 .animated-dashed-line {
-  stroke-dasharray: 6 6;
+  stroke-dasharray: 8 8;
   animation: dashTravel 2s linear infinite;
 }
 
-/* Ambient phone shadow */
-.phone-ambient-shadow {
-  box-shadow: 
-    0 25px 60px -15px rgba(207, 27, 27, 0.22),
-    0 12px 28px -10px rgba(0, 0, 0, 0.15),
-    0 0 0 1px rgba(0, 0, 0, 0.06);
+/* Smooth Transitions */
+.transition-spring {
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* Smooth transitions */
-.transition-smooth {
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+.transition-fluid {
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Subtle pattern for tech section */
-.bg-grid-dots {
-  background-size: 24px 24px;
-  background-image: radial-gradient(circle, rgba(207, 27, 27, 0.12) 1.2px, transparent 1.2px);
+/* Shimmer Animation */
+@keyframes textShimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+.text-gradient-shimmer {
+  background: linear-gradient(
+    90deg,
+    #ffffff 0%,
+    #ffb4aa 25%,
+    #cf1b1b 50%,
+    #ffffff 75%,
+    #ffb4aa 100%
+  );
+  background-size: 200% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: textShimmer 6s linear infinite;
+}
+
+/* Floating Animation */
+@keyframes floatGentle {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(0.5deg);
+  }
+}
+
+.animate-float-gentle {
+  animation: floatGentle 5s ease-in-out infinite;
+}
+
+/* Custom Scrollbar for sleek look */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0d0f12;
+}
+::-webkit-scrollbar-thumb {
+  background: #262a33;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #cf1b1b;
 }
