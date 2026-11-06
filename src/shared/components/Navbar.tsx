@@ -1,20 +1,12 @@
 import React, { useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import {
-  Bus,
-  Menu,
-  X,
-  ShieldCheck,
-  LogIn,
-  LogOut,
-  LayoutDashboard,
-} from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Menu, X, LogIn, LogOut, LayoutDashboard, Smartphone } from 'lucide-react';
 import { useAuth } from '../../core/context/AuthContext';
+import { BusTrackLogo } from './BusTrackLogo';
 
 export const Navbar: React.FC = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { isAuthenticated, session, logout } = useAuth();
-  const location = useLocation();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -23,140 +15,142 @@ export const Navbar: React.FC = () => {
     navigate('/');
   };
 
-  const navItems = [
-    { label: 'Inicio', href: '/' },
-    { label: 'Beneficios', href: '/#beneficios' },
-    { label: 'El Proyecto', href: '/#proyecto' },
-    { label: 'Alcance y Tecnología', href: '/#alcance' },
-    { label: 'App Móvil', href: '/#descarga' },
+  const navLinks = [
+    { label: 'Cómo funciona', href: '/#como-funciona' },
+    { label: 'Funciones', href: '/#funciones' },
+    { label: 'Demo interactiva', href: '/#demo' },
+    { label: 'Arquitectura', href: '/#arquitectura' },
+    { label: 'Cobertura', href: '/#cobertura' },
+    { label: 'Equipo UTTT', href: '/#equipo' },
     { label: 'Privacidad', href: '/privacidad' },
   ];
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-800/80 bg-[#090d16]/85 backdrop-blur-xl">
+    <header className="sticky top-0 z-50 border-b border-rose-100/60 glass-header">
       <a
         href="#contenido-principal"
-        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-xl focus:bg-emerald-500 focus:px-4 focus:py-2 focus:text-xs focus:font-bold focus:text-slate-950"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-xl focus:bg-[#cf1b1b] focus:px-4 focus:py-2 focus:text-xs focus:font-bold focus:text-white shadow-lg"
       >
         Saltar al contenido principal
       </a>
+
       <nav
         className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3.5 sm:px-6 lg:px-8"
         aria-label="Navegación principal"
       >
+        {/* Brand Logo */}
         <Link
           to="/"
-          className="flex items-center gap-3 text-slate-100 transition hover:opacity-90"
+          className="group flex items-center transition-transform hover:scale-[1.02]"
+          aria-label="BusTrack, ir al inicio"
         >
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-400 to-teal-600 text-slate-950 shadow-lg shadow-emerald-500/20">
-            <Bus className="h-5 w-5 stroke-[2.2]" aria-hidden="true" />
-          </div>
-          <div>
-            <span className="text-lg font-extrabold tracking-tight text-white">
-              Bus<span className="text-emerald-400">Track</span>
-            </span>
-            <span className="ml-2 hidden rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 text-[11px] font-semibold text-emerald-300 sm:inline-block">
-              UTTT · Tula-Tepeji
-            </span>
-          </div>
+          <BusTrackLogo withTagline={true} />
         </Link>
 
-        <div className="hidden items-center gap-6 md:flex">
-          {navItems.map((item) => {
-            const isActive =
-              item.href === location.pathname ||
-              (item.href !== '/' && location.hash && item.href.endsWith(location.hash));
-            return (
-              <a
-                key={item.label}
-                href={item.href}
-                className={`text-sm font-medium transition-colors ${
-                  isActive
-                    ? 'text-emerald-400'
-                    : 'text-slate-300 hover:text-white'
-                }`}
-              >
-                {item.label}
-              </a>
-            );
-          })}
+        {/* Desktop Navigation Links */}
+        <div className="hidden items-center gap-1 lg:flex xl:gap-2">
+          {navLinks.map((item) => (
+            <a
+              key={item.href}
+              href={item.href}
+              className="rounded-full px-3.5 py-1.5 text-sm font-medium text-[#333333] transition-colors hover:bg-[#fff0e8] hover:text-[#cf1b1b]"
+            >
+              {item.label}
+            </a>
+          ))}
         </div>
 
-        <div className="hidden items-center gap-3 md:flex">
+        {/* Action Buttons */}
+        <div className="hidden items-center gap-3 sm:flex">
           {isAuthenticated ? (
-            <>
+            <div className="flex items-center gap-2">
               <Link
                 to="/panel"
-                className="inline-flex items-center gap-2 rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-3.5 py-2 text-xs font-semibold text-emerald-300 transition hover:bg-emerald-500/20"
+                className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-4 py-2 text-sm font-semibold text-[#1b1c1c] shadow-sm transition hover:border-[#cf1b1b]/40 hover:text-[#cf1b1b]"
               >
-                <LayoutDashboard className="h-4 w-4" aria-hidden="true" />
-                <span>{session?.userName}</span>
+                <LayoutDashboard className="h-4 w-4 text-[#cf1b1b]" aria-hidden="true" />
+                <span>Panel ({session?.userName || 'Admin'})</span>
               </Link>
               <button
                 type="button"
                 onClick={handleLogout}
-                className="inline-flex items-center gap-1.5 rounded-xl border border-slate-700 bg-slate-800/80 px-3.5 py-2 text-xs font-semibold text-slate-200 transition hover:border-rose-500/50 hover:bg-rose-500/10 hover:text-rose-300"
+                className="inline-flex items-center gap-1.5 rounded-full border border-transparent p-2 text-neutral-500 transition hover:bg-neutral-100 hover:text-neutral-900"
+                title="Cerrar sesión"
+                aria-label="Cerrar sesión de administrador"
               >
                 <LogOut className="h-4 w-4" aria-hidden="true" />
-                <span>Salir</span>
               </button>
-            </>
+            </div>
           ) : (
             <Link
               to="/login"
-              className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-4 py-2 text-sm font-semibold text-slate-950 shadow-md shadow-emerald-500/20 transition hover:bg-emerald-400"
+              className="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold text-[#333333] transition hover:bg-neutral-100 hover:text-[#cf1b1b]"
             >
               <LogIn className="h-4 w-4" aria-hidden="true" />
-              <span>Acceso Corporativo</span>
+              <span>Acceso</span>
             </Link>
           )}
+
+          {/* Primary CTA: Descargar app */}
+          <a
+            href="/#proximamente"
+            className="inline-flex items-center gap-2 rounded-full bg-[#cf1b1b] px-5 py-2.5 text-sm font-bold text-white shadow-md shadow-red-500/20 transition-all hover:bg-[#900d0d] hover:shadow-lg hover:shadow-red-500/30 active:scale-95"
+          >
+            <Smartphone className="h-4 w-4" aria-hidden="true" />
+            <span>Descargar app</span>
+          </a>
         </div>
 
-        <button
-          type="button"
-          onClick={() => setMobileOpen((prev) => !prev)}
-          className="inline-flex items-center justify-center rounded-xl border border-slate-800 bg-slate-900 p-2 text-slate-300 hover:bg-slate-800 hover:text-white md:hidden"
-          aria-expanded={mobileOpen}
-          aria-label="Abrir menú de navegación"
-        >
-          {mobileOpen ? (
-            <X className="h-5 w-5" aria-hidden="true" />
-          ) : (
-            <Menu className="h-5 w-5" aria-hidden="true" />
-          )}
-        </button>
+        {/* Mobile Hamburger Button */}
+        <div className="flex sm:hidden">
+          <button
+            type="button"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            className="inline-flex items-center justify-center rounded-xl p-2 text-neutral-700 hover:bg-neutral-100 hover:text-[#cf1b1b] focus:outline-none focus:ring-2 focus:ring-[#cf1b1b]"
+            aria-expanded={mobileOpen}
+            aria-label="Abrir menú de navegación"
+          >
+            {mobileOpen ? (
+              <X className="h-6 w-6" aria-hidden="true" />
+            ) : (
+              <Menu className="h-6 w-6" aria-hidden="true" />
+            )}
+          </button>
+        </div>
       </nav>
 
+      {/* Mobile Menu Drawer */}
       {mobileOpen && (
-        <div className="border-t border-slate-800 bg-[#0c1220] px-4 py-4 md:hidden">
+        <div className="border-t border-rose-100/60 bg-white/95 px-4 pt-3 pb-6 sm:hidden">
           <div className="flex flex-col space-y-2">
-            {navItems.map((item) => (
+            {navLinks.map((item) => (
               <a
-                key={item.label}
+                key={item.href}
                 href={item.href}
                 onClick={() => setMobileOpen(false)}
-                className="rounded-lg px-3 py-2 text-sm font-medium text-slate-200 hover:bg-slate-800/70 hover:text-emerald-400"
+                className="rounded-xl px-3 py-2.5 text-base font-medium text-[#333333] hover:bg-[#fff0e8] hover:text-[#cf1b1b]"
               >
                 {item.label}
               </a>
             ))}
-            <div className="pt-3 border-t border-slate-800 flex flex-col gap-2">
+
+            <div className="pt-3 border-t border-neutral-100 flex flex-col gap-2">
               {isAuthenticated ? (
                 <>
                   <Link
                     to="/panel"
                     onClick={() => setMobileOpen(false)}
-                    className="flex items-center justify-center gap-2 rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-4 py-2.5 text-sm font-semibold text-emerald-300"
+                    className="flex items-center gap-2 rounded-xl bg-neutral-100 px-4 py-3 text-sm font-semibold text-neutral-900"
                   >
-                    <ShieldCheck className="h-4 w-4" aria-hidden="true" />
-                    <span>Panel ({session?.userName})</span>
+                    <LayoutDashboard className="h-4 w-4 text-[#cf1b1b]" />
+                    <span>Panel de Control ({session?.userName})</span>
                   </Link>
                   <button
                     type="button"
                     onClick={handleLogout}
-                    className="flex items-center justify-center gap-2 rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-2.5 text-sm font-semibold text-rose-300"
+                    className="flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold text-rose-600 hover:bg-rose-50"
                   >
-                    <LogOut className="h-4 w-4" aria-hidden="true" />
+                    <LogOut className="h-4 w-4" />
                     <span>Cerrar sesión</span>
                   </button>
                 </>
@@ -164,12 +158,21 @@ export const Navbar: React.FC = () => {
                 <Link
                   to="/login"
                   onClick={() => setMobileOpen(false)}
-                  className="flex items-center justify-center gap-2 rounded-xl bg-emerald-500 px-4 py-2.5 text-sm font-semibold text-slate-950"
+                  className="flex items-center gap-2 rounded-xl bg-neutral-100 px-4 py-3 text-sm font-semibold text-neutral-800 hover:text-[#cf1b1b]"
                 >
-                  <LogIn className="h-4 w-4" aria-hidden="true" />
-                  <span>Iniciar sesión</span>
+                  <LogIn className="h-4 w-4" />
+                  <span>Acceso Corporativo</span>
                 </Link>
               )}
+
+              <a
+                href="/#proximamente"
+                onClick={() => setMobileOpen(false)}
+                className="flex items-center justify-center gap-2 rounded-xl bg-[#cf1b1b] px-4 py-3.5 text-sm font-bold text-white shadow-md shadow-red-500/20"
+              >
+                <Smartphone className="h-4 w-4" />
+                <span>Descargar app (Google Play)</span>
+              </a>
             </div>
           </div>
         </div>

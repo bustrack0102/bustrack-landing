@@ -1,100 +1,164 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Bus, Shield, Lock, ExternalLink, MapPin } from 'lucide-react';
+import { BusTrackLogo } from './BusTrackLogo';
+import { Heart, MapPin } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="border-t border-slate-800/80 bg-[#060911] text-slate-400">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
-          <div className="md:col-span-2">
-            <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-500 text-slate-950">
-                <Bus className="h-5 w-5" aria-hidden="true" />
-              </div>
-              <span className="text-lg font-bold text-white">
-                Bus<span className="text-emerald-400">Track</span> UTTT
-              </span>
-            </div>
-            <p className="mt-3 max-w-md text-sm leading-relaxed text-slate-400">
-              Portal informativo oficial del proyecto BusTrack — Sistema de consulta y planificación de transporte público para la Región Tula-Tepeji. Desarrollado en la Universidad Tecnológica de Tula-Tepeji bajo metodología SDD + DevSecOps.
+    <footer className="border-t border-neutral-800 bg-[#1f1f1f] text-neutral-300">
+      <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-5">
+          {/* Brand Col */}
+          <div className="lg:col-span-2">
+            <Link to="/" className="inline-block" aria-label="BusTrack inicio">
+              <BusTrackLogo isDark={true} withTagline={true} />
+            </Link>
+            <p className="mt-4 text-sm font-medium leading-relaxed text-neutral-400">
+              Entiende tus rutas. Disfruta más tu camino.
             </p>
-            <div className="mt-4 flex flex-wrap items-center gap-3 text-xs text-slate-400">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-800 bg-slate-900/90 px-3 py-1">
-                <Shield className="h-3.5 w-3.5 text-emerald-400" aria-hidden="true" />
-                Sin rastreo GPS personal
-              </span>
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-800 bg-slate-900/90 px-3 py-1">
-                <Lock className="h-3.5 w-3.5 text-cyan-400" aria-hidden="true" />
-                Privacidad desde el diseño
-              </span>
+            <p className="mt-2 text-xs text-neutral-400 leading-relaxed max-w-sm">
+              Plataforma tecnológica de información y planificación de transporte público para el estado de Hidalgo. Desarrollada por estudiantes de la Universidad Tecnológica de Tula-Tepeji.
+            </p>
+            <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-neutral-700 bg-neutral-800/80 px-3.5 py-1.5 text-xs text-neutral-300">
+              <MapPin className="h-3.5 w-3.5 text-[#cf1b1b]" />
+              <span>Región Tula-Tepeji & Pachuca · Hidalgo, México</span>
             </div>
           </div>
 
+          {/* Col 1: Explora */}
           <div>
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-200">
-              Secciones del Proyecto
-            </h3>
-            <ul className="mt-3 space-y-2.5 text-sm">
+            <h4 className="text-xs font-bold tracking-wider uppercase text-neutral-100">
+              Explora
+            </h4>
+            <ul className="mt-4 space-y-2.5 text-sm">
               <li>
-                <a href="/#beneficios" className="hover:text-emerald-400 transition-colors">
-                  Propuesta de Valor y Beneficios
+                <a
+                  href="/#como-funciona"
+                  className="transition hover:text-white hover:underline underline-offset-4"
+                >
+                  Cómo funciona
                 </a>
               </li>
               <li>
-                <a href="/#proyecto" className="hover:text-emerald-400 transition-colors">
-                  Información del Proyecto y Equipo
+                <a
+                  href="/#funciones"
+                  className="transition hover:text-white hover:underline underline-offset-4"
+                >
+                  Funciones clave
                 </a>
               </li>
               <li>
-                <a href="/#alcance" className="hover:text-emerald-400 transition-colors">
-                  Alcance, Límites y Tecnología
+                <a
+                  href="/#demo"
+                  className="transition hover:text-white hover:underline underline-offset-4"
+                >
+                  Demo interactiva
                 </a>
               </li>
               <li>
-                <a href="/#descarga" className="hover:text-emerald-400 transition-colors">
-                  Descarga de App Móvil (Estado)
+                <a
+                  href="/#arquitectura"
+                  className="transition hover:text-white hover:underline underline-offset-4"
+                >
+                  Arquitectura y Etapas
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/#cobertura"
+                  className="transition hover:text-white hover:underline underline-offset-4"
+                >
+                  Mapa de Cobertura
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/#proximamente"
+                  className="transition hover:text-white hover:underline underline-offset-4"
+                >
+                  Descargar app
                 </a>
               </li>
             </ul>
           </div>
 
+          {/* Col 2: UTTT & Proyecto */}
           <div>
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-200">
-              Legal y Acceso
-            </h3>
-            <ul className="mt-3 space-y-2.5 text-sm">
-              <li>
-                <Link to="/privacidad" className="hover:text-emerald-400 transition-colors">
-                  Aviso de Privacidad y Términos
-                </Link>
-              </li>
-              <li>
-                <Link to="/login" className="hover:text-emerald-400 transition-colors">
-                  Portal Corporativo (Login)
-                </Link>
-              </li>
+            <h4 className="text-xs font-bold tracking-wider uppercase text-neutral-100">
+              Información
+            </h4>
+            <ul className="mt-4 space-y-2.5 text-sm">
               <li>
                 <a
-                  href="https://www.uttt.edu.mx"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 hover:text-emerald-400 transition-colors"
+                  href="/#equipo"
+                  className="transition hover:text-white hover:underline underline-offset-4"
                 >
-                  <span>Portal Institucional UTTT</span>
-                  <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+                  Equipo de desarrollo
                 </a>
+              </li>
+              <li>
+                <span className="text-neutral-400">UTTT · IDGS 10mo</span>
+              </li>
+              <li>
+                <span className="text-neutral-400">Proyecto de Integradora</span>
+              </li>
+              <li>
+                <span className="text-neutral-400">Asesor: Ing. Angel Alvarado</span>
+              </li>
+              <li>
+                <Link
+                  to="/login"
+                  className="inline-flex items-center gap-1.5 text-neutral-400 hover:text-white"
+                >
+                  <span>Acceso Corporativo</span>
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Col 3: Legal & Privacidad */}
+          <div>
+            <h4 className="text-xs font-bold tracking-wider uppercase text-neutral-100">
+              Legal y Ética
+            </h4>
+            <ul className="mt-4 space-y-2.5 text-sm">
+              <li>
+                <Link
+                  to="/privacidad"
+                  className="transition hover:text-white hover:underline underline-offset-4"
+                >
+                  Aviso de Privacidad
+                </Link>
+              </li>
+              <li>
+                <span className="text-neutral-400">Sin rastreo GPS de usuarios</span>
+              </li>
+              <li>
+                <span className="text-neutral-400">Grounding estricto de IA</span>
+              </li>
+              <li>
+                <span className="text-neutral-400">Consentimiento de sensores</span>
+              </li>
+              <li>
+                <span className="text-neutral-400">Validación humana de paradas</span>
               </li>
             </ul>
           </div>
         </div>
 
-        <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-slate-800/70 pt-6 text-xs text-slate-500 sm:flex-row">
-          <p>© 2026 BusTrack — Universidad Tecnológica de Tula-Tepeji. Todos los derechos reservados.</p>
-          <p className="inline-flex items-center gap-1.5">
-            <MapPin className="h-3.5 w-3.5 text-emerald-500" aria-hidden="true" />
-            <span>El Carmen, Tula de Allende, Hidalgo, México</span>
+        {/* Bottom Bar */}
+        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-neutral-800 pt-8 sm:flex-row text-xs text-neutral-400">
+          <p className="flex items-center gap-1.5">
+            <span>© 2025 BusTrack · Universidad Tecnológica de Tula-Tepeji.</span>
+            <span className="hidden sm:inline">· Todos los derechos reservados.</span>
           </p>
+          <div className="flex items-center gap-4">
+            <span className="inline-flex items-center gap-1">
+              <span>Hecho con</span>
+              <Heart className="h-3.5 w-3.5 text-[#cf1b1b] fill-[#cf1b1b]" />
+              <span>en Hidalgo, México</span>
+            </span>
+          </div>
         </div>
       </div>
     </footer>

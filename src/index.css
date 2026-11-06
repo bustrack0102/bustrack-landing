@@ -3,17 +3,74 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --primary-red: #cf1b1b;
+    --primary-red-dark: #900d0d;
+    --peach-soft: #ffdbc5;
+    --peach-tint: #fff0e8;
+    --ink-dark: #1b1c1c;
+    --canvas-bg: #fbf9f8;
+  }
+
   body {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    background-color: #090d16;
-    color: #f1f5f9;
+    font-family: 'Plus Jakarta Sans', 'Manrope', system-ui, -apple-system, sans-serif;
+    background-color: #fbf9f8;
+    color: #1b1c1c;
     overflow-x: hidden;
   }
 }
 
-.bg-grid-pattern {
-  background-size: 40px 40px;
-  background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+/* Glassmorphism */
+.glass-header {
+  background: rgba(255, 255, 255, 0.90);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.glass-dark {
+  background: rgba(38, 38, 38, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* Hero animated subtle glow */
+.hero-glow {
+  background: radial-gradient(circle at 60% 30%, rgba(255, 219, 197, 0.7) 0%, rgba(255, 237, 226, 0.4) 40%, transparent 70%);
+}
+
+/* Animated dashed path for maps and road visuals */
+@keyframes dashTravel {
+  to {
+    stroke-dashoffset: -40;
+  }
+}
+
+.animated-dashed-line {
+  stroke-dasharray: 6 6;
+  animation: dashTravel 2s linear infinite;
+}
+
+/* Ambient phone shadow */
+.phone-ambient-shadow {
+  box-shadow: 
+    0 25px 60px -15px rgba(207, 27, 27, 0.22),
+    0 12px 28px -10px rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(0, 0, 0, 0.06);
+}
+
+/* Smooth transitions */
+.transition-smooth {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Subtle pattern for tech section */
+.bg-grid-dots {
+  background-size: 24px 24px;
+  background-image: radial-gradient(circle, rgba(207, 27, 27, 0.12) 1.2px, transparent 1.2px);
 }
