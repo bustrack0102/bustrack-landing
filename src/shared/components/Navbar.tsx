@@ -33,7 +33,6 @@ export const Navbar: React.FC = () => {
     { label: 'Cómo funciona', href: '/#como-funciona' },
     { label: 'Trayecto Vivo', href: '/#trayecto-vivo' },
     { label: 'Simulador', href: '/#demo' },
-    { label: 'Laboratorio PWA', href: '/#laboratorio' },
     { label: 'Funciones', href: '/#funciones' },
     { label: 'Arquitectura', href: '/#arquitectura' },
     { label: 'Cobertura', href: '/#cobertura' },

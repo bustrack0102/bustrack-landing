@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Smartphone,
@@ -23,10 +23,14 @@ import {
   Award,
   Info,
   Play,
+  Pause,
   RotateCcw,
   Zap,
+  Heart,
+  QrCode,
+  HardDriveDownload,
+  Bell,
 } from 'lucide-react';
-import { PwaPhysicsLab } from '../shared/components/PwaPhysicsLab';
 
 /* -------------------------------------------------------------------------- */
 /* TYPES & DATA                                                               */
@@ -381,6 +385,203 @@ export const LandingPage: React.FC = () => {
   // Privacy Telemetry State
   const [cookieConsent, setCookieConsent] = useState<boolean | null>(null);
 
+  /* ------------------------------------------------------------------------ */
+  /* INTEGRATED ANIMATION STATES & HOOKE'S SPRING PHYSICS REFS                */
+  /* ------------------------------------------------------------------------ */
+
+  // 1. Hero 3D Tilt with Hooke's Law Spring Physics & Radial Spotlight
+  const heroPhoneRef = useRef<HTMLDivElement>(null);
+  const heroSpotlightRef = useRef<HTMLDivElement>(null);
+  const [, setHeroTiltCoords] = useState({ x: 0, y: 0 });
+  const isHoverHeroTiltRef = useRef(false);
+  const heroTiltPhysicsRef = useRef({
+    targetRX: 0,
+    targetRY: 0,
+    currRX: 0,
+    currRY: 0,
+    velRX: 0,
+    velRY: 0,
+    targetScale: 1,
+    currScale: 1,
+    velScale: 0,
+    spotX: 160,
+    spotY: 280,
+  });
+
+  // 2. Hero Dynamic Island State (Inside Phone)
+  const [heroIslandState, setHeroIslandState] = useState<0 | 1 | 2>(0);
+  const [isHeroEqPaused, setIsHeroEqPaused] = useState(false);
+  const [heroIslandFeedback, setHeroIslandFeedback] = useState('Toca un botón');
+
+  // 3. Demo Elastic Squish Fare Switch
+  const [isStudentFareMode, setIsStudentFareMode] = useState(false);
+
+  // 4. Demo Micro-SVG Offline Sync State
+  const [catalogSyncState, setCatalogSyncState] = useState<'idle' | 'spinning' | 'done'>('idle');
+
+  // 5. Demo Tactile Route Recommendation (+1 Burst & Pop)
+  const [routeLikes, setRouteLikes] = useState<{ [id: string]: number }>({
+    'tula-uttt-01': 148,
+    'coral-08': 92,
+    'pachuca-real-03': 124,
+  });
+  const [likeBurstRings, setLikeBurstRings] = useState<{ [id: string]: number[] }>({});
+
+  // 6. Magnetic Simulation Button Physics
+  const simMagWrapRef = useRef<HTMLDivElement>(null);
+  const simMagBtnRef = useRef<HTMLButtonElement>(null);
+  const simMagPhysicsRef = useRef({
+    magTX: 0,
+    magTY: 0,
+    magCX: 0,
+    magCY: 0,
+    magVX: 0,
+    magVY: 0,
+  });
+
+  // 7. Cobertura Shockwave Ripples
+  const [mapWaves, setMapWaves] = useState<{ id: number; x: number; y: number }[]>([]);
+
+  /* ------------------------------------------------------------------------ */
+  /* ANIMATION EVENT HANDLERS                                                 */
+  /* ------------------------------------------------------------------------ */
+
+  const handleHeroPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    isHoverHeroTiltRef.current = true;
+    if (!heroPhoneRef.current || !heroSpotlightRef.current) return;
+    const rect = heroPhoneRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    heroTiltPhysicsRef.current.spotX = x;
+    heroTiltPhysicsRef.current.spotY = y;
+
+    const normX = Math.max(-1.2, Math.min(1.2, (x / rect.width - 0.5) * 2));
+    const normY = Math.max(-1.2, Math.min(1.2, (y / rect.height - 0.5) * 2));
+    heroTiltPhysicsRef.current.targetRY = normX * 16;
+    heroTiltPhysicsRef.current.targetRX = -normY * 14;
+
+    heroSpotlightRef.current.style.opacity = '1';
+    heroSpotlightRef.current.style.background = `radial-gradient(240px circle at ${x}px ${y}px, ${heroMode.accentColor}44, transparent 75%)`;
+  };
+
+  const handleHeroPointerLeave = () => {
+    isHoverHeroTiltRef.current = false;
+    heroTiltPhysicsRef.current.targetRX = 0;
+    heroTiltPhysicsRef.current.targetRY = 0;
+    heroTiltPhysicsRef.current.targetScale = 1;
+    if (heroSpotlightRef.current) {
+      heroSpotlightRef.current.style.opacity = '0';
+    }
+  };
+
+  const handleHeroPointerDown = () => {
+    heroTiltPhysicsRef.current.velScale -= 0.05;
+  };
+
+  const handleSimMagPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!simMagWrapRef.current) return;
+    const bRect = simMagWrapRef.current.getBoundingClientRect();
+    const bx = e.clientX - (bRect.left + bRect.width / 2);
+    const by = e.clientY - (bRect.top + bRect.height / 2);
+    const dist = Math.hypot(bx, by);
+    if (dist < 100) {
+      simMagPhysicsRef.current.magTX = bx * 0.35;
+      simMagPhysicsRef.current.magTY = by * 0.35;
+    } else {
+      simMagPhysicsRef.current.magTX = 0;
+      simMagPhysicsRef.current.magTY = 0;
+    }
+  };
+
+  const handleSimMagPointerLeave = () => {
+    simMagPhysicsRef.current.magTX = 0;
+    simMagPhysicsRef.current.magTY = 0;
+  };
+
+  const handleRouteLike = (routeId: string) => {
+    setRouteLikes((prev) => ({
+      ...prev,
+      [routeId]: (prev[routeId] || 0) + 1,
+    }));
+
+    const ringId = Date.now();
+    setLikeBurstRings((prev) => ({
+      ...prev,
+      [routeId]: [...(prev[routeId] || []), ringId],
+    }));
+
+    setTimeout(() => {
+      setLikeBurstRings((prev) => ({
+        ...prev,
+        [routeId]: (prev[routeId] || []).filter((id) => id !== ringId),
+      }));
+    }, 700);
+  };
+
+  const handleCatalogSync = () => {
+    if (catalogSyncState !== 'idle') return;
+    setCatalogSyncState('spinning');
+    setTimeout(() => {
+      setCatalogSyncState('done');
+      setTimeout(() => {
+        setCatalogSyncState('idle');
+      }, 2000);
+    }, 850);
+  };
+
+  const handleMapClick = (x: number, y: number) => {
+    const waveId = Date.now() + Math.random();
+    setMapWaves((prev) => [...prev, { id: waveId, x, y }]);
+    setTimeout(() => {
+      setMapWaves((prev) => prev.filter((w) => w.id !== waveId));
+    }, 900);
+  };
+
+  // Unified 60 FPS Physics Loop for Hero Tilt & Magnetic Sim Button
+  useEffect(() => {
+    let animId: number;
+
+    const tick = (now: number) => {
+      // 1. Hero 3D Tilt Spring Physics
+      if (heroPhoneRef.current) {
+        const p = heroTiltPhysicsRef.current;
+        if (!isHoverHeroTiltRef.current) {
+          p.targetRY = Math.sin(now * 0.0016) * 5;
+          p.targetRX = Math.cos(now * 0.0012) * 3;
+        }
+        const stiffness = 0.12;
+        const damping = 0.76;
+
+        p.velRX = (p.velRX + (p.targetRX - p.currRX) * stiffness) * damping;
+        p.velRY = (p.velRY + (p.targetRY - p.currRY) * stiffness) * damping;
+        p.currRX += p.velRX;
+        p.currRY += p.velRY;
+
+        p.velScale = (p.velScale + (p.targetScale - p.currScale) * 0.18) * 0.72;
+        p.currScale += p.velScale;
+
+        heroPhoneRef.current.style.transform = `rotateX(${p.currRX.toFixed(2)}deg) rotateY(${p.currRY.toFixed(2)}deg) scale(${p.currScale.toFixed(3)})`;
+        setHeroTiltCoords({ x: Math.round(p.currRX), y: Math.round(p.currRY) });
+      }
+
+      // 2. Magnetic Simulation Button Physics
+      if (simMagBtnRef.current) {
+        const mag = simMagPhysicsRef.current;
+        mag.magVX = (mag.magVX + (mag.magTX - mag.magCX) * 0.16) * 0.75;
+        mag.magVY = (mag.magVY + (mag.magTY - mag.magCY) * 0.16) * 0.75;
+        mag.magCX += mag.magVX;
+        mag.magCY += mag.magVY;
+
+        simMagBtnRef.current.style.transform = `translate(${mag.magCX.toFixed(2)}px, ${mag.magCY.toFixed(2)}px)`;
+      }
+
+      animId = requestAnimationFrame(tick);
+    };
+
+    animId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(animId);
+  }, []);
+
   // Handle Simulated Search
   const handleRunSearch = (origin: string, destination: string) => {
     setIsSearching(true);
@@ -545,8 +746,13 @@ export const LandingPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Right: 3D Animated Interactive Phone Device */}
-            <div className="relative flex justify-center lg:col-span-5 perspective-1500">
+            {/* Right: 3D Animated Interactive Phone Device with Hooke's Law Tilt & Dynamic Island */}
+            <div
+              onPointerMove={handleHeroPointerMove}
+              onPointerLeave={handleHeroPointerLeave}
+              onPointerDown={handleHeroPointerDown}
+              className="perspective-stage relative flex justify-center lg:col-span-5 cursor-pointer select-none"
+            >
               {/* Concentric Rotating Orbital Rings */}
               <div
                 className="pointer-events-none absolute -inset-10 rounded-full border border-dashed border-[#cf1b1b]/30 animate-orbit"
@@ -596,16 +802,138 @@ export const LandingPage: React.FC = () => {
                 </div>
               </div>
 
-              {/* 3D Phone Chassis */}
-              <div className="relative z-20 w-[300px] sm:w-[325px] rounded-[52px] bg-[#16181f] p-3.5 shadow-2xl ring-1 ring-white/15 transition-transform duration-500 hover:rotate-1 hover:scale-[1.02]">
-                {/* Speaker Notch */}
-                <div className="mx-auto mb-3 flex h-4 w-28 items-center justify-center rounded-full bg-[#0d0f14]">
-                  <div className="h-1.5 w-10 rounded-full bg-neutral-700" />
-                  <div className="ml-2 h-2.5 w-2.5 rounded-full bg-neutral-900 border border-neutral-700" />
+              {/* 3D Phone Chassis with Hooke's Law Spring Inertia */}
+              <div
+                ref={heroPhoneRef}
+                className="preserve-3d relative z-20 w-[300px] sm:w-[325px] rounded-[52px] bg-[#16181f] p-3.5 shadow-2xl ring-1 ring-white/15"
+              >
+                {/* Dynamic Radial Spotlight following cursor */}
+                <div
+                  ref={heroSpotlightRef}
+                  className="pointer-events-none absolute inset-0 rounded-[52px] opacity-0 transition-opacity duration-300"
+                />
+
+                {/* BusTrack Dynamic Island (Morphing Pill with spring cubic-bezier) */}
+                <div className="relative mx-auto mb-2 flex justify-center z-layer-3">
+                  <div
+                    onClick={() => setHeroIslandState(((heroIslandState + 1) % 3) as 0 | 1 | 2)}
+                    className="island-morph cursor-pointer overflow-hidden border border-neutral-700/80 bg-[#0a0c10] shadow-xl text-white"
+                    style={{
+                      width: heroIslandState === 0 ? '190px' : heroIslandState === 1 ? '260px' : '260px',
+                      height: heroIslandState === 0 ? '34px' : heroIslandState === 1 ? '76px' : '84px',
+                      borderRadius: heroIslandState === 0 ? '17px' : '18px',
+                    }}
+                    title="Toca para alternar la Isla Dinámica de Tránsito"
+                  >
+                    {/* State 0: Compact Pill */}
+                    {heroIslandState === 0 && (
+                      <div className="flex h-full w-full items-center justify-between px-3">
+                        <div className="flex items-center gap-2">
+                          <span className="relative flex h-2 w-2">
+                            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                            <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+                          </span>
+                          <span className="text-[11px] font-bold text-white whitespace-nowrap">UTTT en camino</span>
+                        </div>
+                        <span className="font-mono text-[10px] text-neutral-400">v2.4 PWA</span>
+                      </div>
+                    )}
+
+                    {/* State 1: Live Transit Activity Equalizer */}
+                    {heroIslandState === 1 && (
+                      <div className="flex h-full w-full flex-col justify-between p-2">
+                        <div className="flex items-center justify-between gap-2">
+                          <div className="flex items-center gap-2">
+                            <div className="flex h-7 w-7 items-center justify-center rounded-lg border border-red-500/30 bg-red-500/10">
+                              <div className={`flex h-3 items-end gap-0.5 ${isHeroEqPaused ? 'eq-paused' : ''}`}>
+                                <span className="eq-bar h-3 w-0.5 rounded-full bg-[#cf1b1b]" style={{ animationDelay: '0ms' }} />
+                                <span className="eq-bar h-3 w-0.5 rounded-full bg-[#cf1b1b]" style={{ animationDelay: '180ms' }} />
+                                <span className="eq-bar h-3 w-0.5 rounded-full bg-[#cf1b1b]" style={{ animationDelay: '320ms' }} />
+                              </div>
+                            </div>
+                            <div className="leading-tight text-left">
+                              <div className="text-[11px] font-bold text-white">Línea AVM · 4.2 km</div>
+                              <div className="text-[10px] text-neutral-400">12 min restantes</div>
+                            </div>
+                          </div>
+
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setIsHeroEqPaused(!isHeroEqPaused);
+                            }}
+                            className="inline-flex items-center gap-1 rounded-md bg-neutral-800 px-2 py-0.5 text-[10px] font-bold text-white hover:bg-neutral-700"
+                          >
+                            {isHeroEqPaused ? (
+                              <>
+                                <Play className="h-2.5 w-2.5 text-emerald-400 fill-emerald-400" />
+                                <span>Reanudar</span>
+                              </>
+                            ) : (
+                              <>
+                                <Pause className="h-2.5 w-2.5 text-neutral-300" />
+                                <span>Pausar</span>
+                              </>
+                            )}
+                          </button>
+                        </div>
+
+                        <div className="h-1 w-full overflow-hidden rounded-full bg-neutral-800">
+                          <div className="h-full w-3/4 rounded-full bg-gradient-to-r from-[#cf1b1b] to-emerald-400" />
+                        </div>
+                      </div>
+                    )}
+
+                    {/* State 2: Quick Action Bento */}
+                    {heroIslandState === 2 && (
+                      <div className="flex h-full w-full flex-col justify-between p-2">
+                        <div className="flex items-center justify-between text-[10px]">
+                          <span className="font-bold text-neutral-300">Acceso Rápido PWA</span>
+                          <span className="font-mono text-rose-400 font-semibold">{heroIslandFeedback}</span>
+                        </div>
+                        <div className="grid grid-cols-3 gap-1.5">
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setHeroIslandFeedback('QR listo');
+                            }}
+                            className="flex items-center justify-center gap-1 rounded-lg border border-neutral-700 bg-neutral-800/80 py-1 text-[10px] font-medium text-white hover:border-[#cf1b1b]"
+                          >
+                            <QrCode className="h-3 w-3 text-[#cf1b1b]" />
+                            <span>QR</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setHeroIslandFeedback('Offline OK');
+                            }}
+                            className="flex items-center justify-center gap-1 rounded-lg border border-neutral-700 bg-neutral-800/80 py-1 text-[10px] font-medium text-white hover:border-emerald-500"
+                          >
+                            <HardDriveDownload className="h-3 w-3 text-emerald-400" />
+                            <span>Offline</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setHeroIslandFeedback('Alerta activa');
+                            }}
+                            className="flex items-center justify-center gap-1 rounded-lg border border-neutral-700 bg-neutral-800/80 py-1 text-[10px] font-medium text-white hover:border-amber-500"
+                          >
+                            <Bell className="h-3 w-3 text-amber-400" />
+                            <span>Alerta</span>
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 {/* Inner Screen */}
-                <div className="overflow-hidden rounded-[40px] bg-[#0f1117] p-4 text-white border border-neutral-800">
+                <div className="overflow-hidden rounded-[40px] bg-[#0f1117] p-4 text-white border border-neutral-800 z-layer-2">
                   {/* Status Bar */}
                   <div className="flex items-center justify-between pb-3 border-b border-neutral-800/80">
                     <div className="flex items-center gap-2">
@@ -1043,12 +1371,19 @@ export const LandingPage: React.FC = () => {
                 <p className="mt-1.5 text-xs text-neutral-300">
                   Haz clic para ver el bus avanzar estación por estación con actualización en tiempo real:
                 </p>
-                <div className="mt-4 flex items-center gap-3">
+                {/* Magnetic Interactive Bus Simulation Button */}
+                <div
+                  ref={simMagWrapRef}
+                  onPointerMove={handleSimMagPointerMove}
+                  onPointerLeave={handleSimMagPointerLeave}
+                  className="mt-4 flex items-center gap-3"
+                >
                   <button
+                    ref={simMagBtnRef}
                     type="button"
                     onClick={() => setIsSimulatingTrip(true)}
                     disabled={isSimulatingTrip}
-                    className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#cf1b1b] to-[#900d0d] py-2.5 text-xs font-bold text-white shadow-md disabled:opacity-50"
+                    className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#cf1b1b] to-[#900d0d] py-2.5 text-xs font-bold text-white shadow-md transition-shadow hover:shadow-red-600/50 disabled:opacity-50 active:scale-95 cursor-pointer"
                   >
                     <Play className="h-3.5 w-3.5 fill-white" />
                     <span>{isSimulatingTrip ? 'Simulando viaje...' : 'Iniciar Simulación'}</span>
@@ -1146,69 +1481,156 @@ export const LandingPage: React.FC = () => {
                   )}
                 </button>
 
+                {/* Micro-UI Controls: Elastic Squish Fare Switch & SVG Offline Cache Sync */}
+                <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-neutral-900/90 p-3.5 border border-neutral-800">
+                  {/* Elastic Squish Switch for Fares */}
+                  <div className="flex items-center gap-2.5">
+                    <span className="text-xs font-bold text-neutral-300">Tarifa:</span>
+                    <button
+                      type="button"
+                      aria-label="Alternar tarifa estudiante"
+                      onClick={() => setIsStudentFareMode(!isStudentFareMode)}
+                      className={`switch-btn relative flex h-7 w-14 items-center rounded-full border p-0.5 transition-colors duration-300 ${
+                        isStudentFareMode
+                          ? 'border-emerald-500/60 bg-emerald-500/20'
+                          : 'border-red-500/60 bg-red-500/20'
+                      }`}
+                    >
+                      <div
+                        className={`switch-thumb flex h-5.5 w-5.5 items-center justify-center rounded-full text-white text-[10px] font-black shadow transition-all duration-300 ${
+                          isStudentFareMode ? 'bg-emerald-500' : 'bg-[#cf1b1b]'
+                        }`}
+                        style={{
+                          transform: isStudentFareMode ? 'translateX(26px)' : 'translateX(0px)',
+                        }}
+                      >
+                        {isStudentFareMode ? '50%' : '$'}
+                      </div>
+                    </button>
+                    <span className={`text-xs font-bold ${isStudentFareMode ? 'text-emerald-400' : 'text-neutral-400'}`}>
+                      {isStudentFareMode ? 'Estudiante UTTT (-50%)' : 'Tarifa General'}
+                    </span>
+                  </div>
+
+                  {/* Micro-SVG Checkmark Offline Sync */}
+                  <button
+                    type="button"
+                    onClick={handleCatalogSync}
+                    disabled={catalogSyncState !== 'idle'}
+                    className="inline-flex items-center gap-1.5 rounded-xl border border-neutral-700 bg-neutral-800/90 px-3 py-1.5 text-xs font-bold text-white transition-all hover:border-[#cf1b1b] active:scale-95 disabled:opacity-85"
+                  >
+                    {catalogSyncState === 'idle' && <HardDriveDownload className="h-3.5 w-3.5 text-neutral-300" />}
+                    {catalogSyncState === 'spinning' && (
+                      <svg className="h-3.5 w-3.5 animate-spin text-[#cf1b1b]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                        <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+                      </svg>
+                    )}
+                    {catalogSyncState === 'done' && (
+                      <svg className="h-3.5 w-3.5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path className="check-path check-drawn" d="M20 6 9 17l-5-5" />
+                      </svg>
+                    )}
+                    <span>
+                      {catalogSyncState === 'idle' && 'Guardar Offline'}
+                      {catalogSyncState === 'spinning' && 'Sincronizando...'}
+                      {catalogSyncState === 'done' && '¡Caché Lista!'}
+                    </span>
+                  </button>
+                </div>
+
                 {/* Search Results List */}
-                <div className="mt-6 space-y-4">
+                <div className="mt-5 space-y-4">
                   <div className="flex items-center justify-between text-xs text-neutral-400">
                     <span className="font-bold uppercase tracking-wider">
                       Resultados disponibles ({searchResults.length})
                     </span>
-                    <span>Tarifas actualizadas 2025</span>
+                    <span>Tarifas vigentes Estado de Hidalgo</span>
                   </div>
 
-                  {searchResults.map((route) => (
-                    <div
-                      key={route.id}
-                      className="rounded-2xl border border-neutral-800 bg-neutral-900/80 p-4 transition-all hover:border-[#cf1b1b]/50 hover:shadow-warm-sm"
-                    >
-                      <div className="flex flex-wrap items-center justify-between gap-2">
-                        <div className="flex items-center gap-2">
-                          <span className="font-bold text-white text-base">
-                            {route.name}
-                          </span>
-                          {route.isAiRecommended && (
-                            <span className="inline-flex items-center gap-1 rounded-full bg-rose-950 px-2.5 py-0.5 text-[11px] font-bold text-rose-300 border border-rose-900/50">
-                              <Sparkles className="h-3 w-3 text-[#cf1b1b]" />
-                              Recomendada
+                  {searchResults.map((route) => {
+                    const activeFare = isStudentFareMode ? route.fareStudent : route.fareRegular;
+                    return (
+                      <div
+                        key={route.id}
+                        className="rounded-2xl border border-neutral-800 bg-neutral-900/80 p-4 transition-all hover:border-[#cf1b1b]/50 hover:shadow-warm-sm"
+                      >
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold text-white text-base">
+                              {route.name}
                             </span>
-                          )}
-                        </div>
-                        <div className="text-right">
-                          <span className="text-base font-extrabold text-[#cf1b1b]">
-                            ${route.fareRegular.toFixed(2)} MXN
-                          </span>
-                          <span className="block text-[10px] text-neutral-400">
-                            Estudiantes: ${route.fareStudent.toFixed(2)}
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="mt-2 text-xs text-neutral-400">
-                        {route.operator} · {route.type}
-                      </div>
-
-                      {/* Timeline & Stops summary */}
-                      <div className="mt-3 flex items-center justify-between border-t border-neutral-800 pt-3 text-xs text-neutral-400">
-                        <div className="flex items-center gap-3">
-                          <span className="font-semibold text-white">
-                            {route.departure} — {route.arrival}
-                          </span>
-                          <span className="rounded bg-neutral-800 px-2 py-0.5 font-medium text-neutral-300">
-                            {route.durationMin} min
-                          </span>
-                          <span>{route.stopsCount} paradas</span>
+                            {route.isAiRecommended && (
+                              <span className="inline-flex items-center gap-1 rounded-full bg-rose-950 px-2.5 py-0.5 text-[11px] font-bold text-rose-300 border border-rose-900/50">
+                                <Sparkles className="h-3 w-3 text-[#cf1b1b]" />
+                                Recomendada
+                              </span>
+                            )}
+                          </div>
+                          <div className="text-right">
+                            <span className={`text-base font-extrabold ${isStudentFareMode ? 'text-emerald-400' : 'text-[#cf1b1b]'}`}>
+                              ${activeFare.toFixed(2)} MXN
+                            </span>
+                            <span className="block text-[10px] text-neutral-400">
+                              {isStudentFareMode ? 'Con credencial UTTT' : `Estudiantes: $${route.fareStudent.toFixed(2)}`}
+                            </span>
+                          </div>
                         </div>
 
-                        <button
-                          type="button"
-                          onClick={() => setSelectedRouteModal(route)}
-                          className="inline-flex items-center gap-1 text-xs font-bold text-[#cf1b1b] hover:text-rose-400"
-                        >
-                          <span>Ver detalles</span>
-                          <ArrowRight className="h-3.5 w-3.5" />
-                        </button>
+                        <div className="mt-2 text-xs text-neutral-400">
+                          {route.operator} · {route.type}
+                        </div>
+
+                        {/* Timeline & Stops summary + Tactile Reaction */}
+                        <div className="mt-3 flex items-center justify-between border-t border-neutral-800 pt-3 text-xs text-neutral-400">
+                          <div className="flex items-center gap-3">
+                            <span className="font-semibold text-white">
+                              {route.departure} — {route.arrival}
+                            </span>
+                            <span className="rounded bg-neutral-800 px-2 py-0.5 font-medium text-neutral-300">
+                              {route.durationMin} min
+                            </span>
+                            <span>{route.stopsCount} paradas</span>
+                          </div>
+
+                          <div className="flex items-center gap-2">
+                            {/* Tactile Like Button with Burst Rings & +1 Float */}
+                            <div className="relative flex items-center">
+                              <button
+                                type="button"
+                                onClick={() => handleRouteLike(route.id)}
+                                className="relative inline-flex items-center gap-1 rounded-xl border border-pink-500/30 bg-pink-500/10 px-2.5 py-1 text-xs font-bold text-pink-300 transition-all hover:bg-pink-500/20 active:scale-90"
+                                title="Recomendar esta corrida"
+                              >
+                                <Heart className="h-3.5 w-3.5 fill-pink-500 text-pink-500" />
+                                <span className="font-mono text-[11px]">{routeLikes[route.id] || 48}</span>
+                              </button>
+
+                              {/* Burst Layer */}
+                              <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+                                {(likeBurstRings[route.id] || []).map((ringId) => (
+                                  <React.Fragment key={ringId}>
+                                    <span className="ring-anim absolute h-8 w-8 rounded-full border-2 border-pink-500" />
+                                    <span className="float-plus absolute font-mono text-[11px] font-bold text-pink-400">
+                                      +1
+                                    </span>
+                                  </React.Fragment>
+                                ))}
+                              </div>
+                            </div>
+
+                            <button
+                              type="button"
+                              onClick={() => setSelectedRouteModal(route)}
+                              className="inline-flex items-center gap-1 text-xs font-bold text-[#cf1b1b] hover:text-rose-400"
+                            >
+                              <span>Ver detalles</span>
+                              <ArrowRight className="h-3.5 w-3.5" />
+                            </button>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             </div>
@@ -1313,34 +1735,6 @@ export const LandingPage: React.FC = () => {
             </div>
           </div>
         )}
-      </section>
-
-      {/* -------------------------------------------------------------------- */}
-      {/* 4.5. LABORATORIO DE MICRO-FÍSICA & EXPERIENCIA PWA                   */}
-      {/* -------------------------------------------------------------------- */}
-      <section id="laboratorio" className="py-24 bg-[#0d1017] border-t border-neutral-800 relative overflow-hidden">
-        {/* Ambient glow */}
-        <div
-          className="pointer-events-none absolute top-1/2 left-1/2 -z-10 h-[500px] w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-20 blur-[130px] bg-red-600"
-          aria-hidden="true"
-        />
-
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-14">
-            <span className="inline-flex items-center gap-2 rounded-full border border-red-500/30 bg-red-950/40 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-rose-300">
-              <Sparkles className="h-3.5 w-3.5 text-amber-400" />
-              <span>Experiencia Táctil & Física en Vivo</span>
-            </span>
-            <h2 className="mt-4 font-display text-3xl font-extrabold sm:text-5xl text-white">
-              Laboratorio de Física & <span className="text-[#cf1b1b]">Micro-UI para PWA</span>
-            </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-base text-neutral-400">
-              Prueba la tecnología detrás de BusTrack: amortiguación de resortes físicos de Hooke, morphing cúbico de contenedores dinámicos y micro-interacciones táctiles a 120 FPS.
-            </p>
-          </div>
-
-          <PwaPhysicsLab />
-        </div>
       </section>
 
       {/* -------------------------------------------------------------------- */}
@@ -1629,11 +2023,17 @@ export const LandingPage: React.FC = () => {
                   </span>
                 </div>
 
-                {/* Night-mode SVG Map */}
+                {/* Night-mode SVG Map with Interactive Shockwaves */}
                 <div className="mt-4 relative h-72 sm:h-80 w-full rounded-2xl bg-neutral-950 overflow-hidden border border-neutral-800 flex items-center justify-center">
                   <svg
                     viewBox="0 0 360 300"
-                    className="h-full w-full select-none"
+                    onClick={(e) => {
+                      const rect = e.currentTarget.getBoundingClientRect();
+                      const x = ((e.clientX - rect.left) / rect.width) * 360;
+                      const y = ((e.clientY - rect.top) / rect.height) * 300;
+                      handleMapClick(x, y);
+                    }}
+                    className="h-full w-full select-none cursor-crosshair"
                     aria-label="Mapa cartográfico de corredores de transporte en Hidalgo"
                   >
                     {/* Background terrain silhouettes */}
@@ -1673,6 +2073,20 @@ export const LandingPage: React.FC = () => {
                       opacity="0.8"
                     />
 
+                    {/* Dynamic Shockwaves on Click */}
+                    {mapWaves.map((wave) => (
+                      <circle
+                        key={wave.id}
+                        cx={wave.x}
+                        cy={wave.y}
+                        r="35"
+                        fill="none"
+                        stroke="#cf1b1b"
+                        strokeWidth="2.5"
+                        className="ring-anim"
+                      />
+                    ))}
+
                     {/* Clickable zone nodes */}
                     {COVERAGE_ZONES.map((zone) => {
                       const isSelected = activeZone.id === zone.id;
@@ -1680,7 +2094,11 @@ export const LandingPage: React.FC = () => {
                         <g
                           key={zone.id}
                           className="cursor-pointer transition-transform hover:scale-110"
-                          onClick={() => setActiveZone(zone)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setActiveZone(zone);
+                            handleMapClick(zone.coordinates.x, zone.coordinates.y);
+                          }}
                         >
                           {isSelected && (
                             <circle

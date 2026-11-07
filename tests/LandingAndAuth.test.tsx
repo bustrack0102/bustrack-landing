@@ -94,34 +94,44 @@ describe('BusTrack React Portal — Landing Urban Transit Pulse y Autenticación
     ).toBeInTheDocument();
   });
 
-  it('permite interactuar con el Laboratorio de Física PWA y sus 4 pestañas', () => {
+  it('permite interactuar con la Isla Dinámica en el Hero, el switch elástico de tarifas y el guardado offline', () => {
     render(
       <MemoryRouter initialEntries={['/']}>
         <App />
       </MemoryRouter>
     );
 
-    expect(screen.getByText(/Laboratorio de Física &/i)).toBeInTheDocument();
-    expect(screen.getByText(/BusTrack Core Telemetría/i)).toBeInTheDocument();
+    // 1. Isla Dinámica en Hero
+    const dynamicIsland = screen.getByTitle(/Toca para alternar la Isla Dinámica de Tránsito/i);
+    expect(dynamicIsland).toBeInTheDocument();
+    expect(screen.getByText(/UTTT en camino/i)).toBeInTheDocument();
 
-    // Alternar a Isla Dinámica
-    const islandTab = screen.getByRole('button', { name: /2. Isla Dinámica/i });
-    fireEvent.click(islandTab);
-    expect(screen.getByText(/Unidad UTTT Sincronizada/i)).toBeInTheDocument();
+    // Clic en la isla para alternar a Actividad en Tránsito con Ecualizador
+    fireEvent.click(dynamicIsland);
+    expect(screen.getByText(/Línea AVM · 4.2 km/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Pausar/i })).toBeInTheDocument();
 
-    // Alternar a Canvas + Imán
-    const canvasTab = screen.getByRole('button', { name: /3. Canvas \+ Imán/i });
-    fireEvent.click(canvasTab);
-    expect(
-      screen.getByRole('button', { name: /botón magnético de parada/i })
-    ).toBeInTheDocument();
+    // 2. Switch Elástico de Tarifas en la Demo
+    const fareSwitch = screen.getByRole('button', { name: /Alternar tarifa estudiante/i });
+    expect(fareSwitch).toBeInTheDocument();
+    expect(screen.getByText(/Tarifa General/i)).toBeInTheDocument();
 
-    // Alternar a Micro-SVG
-    const microTab = screen.getByRole('button', { name: /4. Micro-SVG/i });
-    fireEvent.click(microTab);
-    expect(screen.getByText(/Sincronización de Catálogo/i)).toBeInTheDocument();
-    expect(screen.getByText(/Tarifa Dinámica/i)).toBeInTheDocument();
-    expect(screen.getByText(/Calificar Servicio/i)).toBeInTheDocument();
+    // Al alternar el switch, activa la tarifa de estudiante
+    fireEvent.click(fareSwitch);
+    expect(screen.getByText(/Estudiante UTTT \(-50%\)/i)).toBeInTheDocument();
+
+    // 3. Botón de Sincronización Offline de Catálogo
+    const syncBtn = screen.getByRole('button', { name: /Guardar Offline/i });
+    expect(syncBtn).toBeInTheDocument();
+
+    // 4. Botón Magnético de Simulación en Vivo
+    const magSimBtn = screen.getByRole('button', { name: /Iniciar Simulación/i });
+    expect(magSimBtn).toBeInTheDocument();
+
+    // 5. Botones Hápticos de Recomendación en las Rutas
+    const likeBtns = screen.getAllByTitle(/Recomendar esta corrida/i);
+    expect(likeBtns.length).toBeGreaterThan(0);
+    fireEvent.click(likeBtns[0]);
   });
 
   it('permite aceptar el aviso de privacidad y telemetría', () => {
