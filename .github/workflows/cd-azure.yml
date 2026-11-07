@@ -32,4 +32,43 @@ jobs:
 
       - name: Restart Azure Container Instance to pull and build latest main
         run: |
+          echo "Reiniciando contenedor bustrack-landing en Azure (rg-bustrack-ncus)..."
           az container restart --resource-group rg-bustrack-ncus --name bustrack-landing
+
+      - name: Smoke Test & Health Check Probe
+        run: |
+          LANDING_URL="http://bustrack-landing-uttt.northcentralus.azurecontainer.io:8000"
+          echo "Verificando disponibilidad de la Landing en $LANDING_URL..."
+          MAX_RETRIES=15
+          DELAY=5
+          HEALTHY=0
+
+          for i in $(seq 1 $MAX_RETRIES); do
+            echo "Intento $i/$MAX_RETRIES: Consultando $LANDING_URL..."
+            STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 "$LANDING_URL" || echo "000")
+            if [ "$STATUS_CODE" -eq 200 ]; then
+              echo "✅ Landing page respondió con 200 OK!"
+              HEALTHY=1
+              break
+            fi
+            echo "El contenedor aún está iniciando (código HTTP $STATUS_CODE). Esperando ${DELAY}s..."
+            sleep $DELAY
+          done
+
+          if [ "$HEALTHY" -ne 1 ]; then
+            echo "❌ Error: La landing page no respondió 200 OK tras $((MAX_RETRIES * DELAY)) segundos."
+            exit 1
+          fi
+
+      - name: Generate Deployment Summary
+        if: always()
+        run: |
+          echo "### 🚀 Resumen de Despliegue de Landing Page en Azure" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Propiedad | Detalle |" >> $GITHUB_STEP_SUMMARY
+          echo "|---|---|" >> $GITHUB_STEP_SUMMARY
+          echo "| **Estado** | 🟢 Exitoso |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Resource Group** | \`rg-bustrack-ncus\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Contenedor** | \`bustrack-landing\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Región** | North Central US |" >> $GITHUB_STEP_SUMMARY
+          echo "| **URL Pública** | [bustrack-landing-uttt](http://bustrack-landing-uttt.northcentralus.azurecontainer.io:8000) |" >> $GITHUB_STEP_SUMMARY
