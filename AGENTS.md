@@ -10,14 +10,13 @@
 
 ## 2. Arquitectura que debes respetar
 
-- Angular + TypeScript es la tecnología objetivo; Razor Pages queda como referencia funcional.
+- React 19 + TypeScript + Vite es la tecnología activa (evolución documentada respecto a la propuesta inicial Angular y Razor Pages).
 - La landing presenta el producto, enlaces de descarga, privacidad y acceso autenticado.
 - La API central sigue siendo responsable de autenticación y lógica de negocio.
-- No se almacenan tokens en localStorage sin decisión de seguridad aprobada.
+- No se almacenan tokens persistentes sin expiración ni secretos hardcodeados en el cliente (`sessionStorage` acotado a máx. 24h y limpieza en logout).
 - No se publican enlaces de tienda inexistentes.
 
-- Stack objetivo: Angular + TypeScript (SPA) consumiendo la API central; estrategia de sesión pendiente de autorización.
-- Stack actual: ASP.NET Core .NET 10 Razor Pages, cookie auth, Serilog, HTTP resilience, Docker, Gitleaks, ZAP.
+- Stack actual / objetivo: React 19 + TypeScript + Vite + Tailwind CSS + React Router + Vitest consumiendo la API central (.NET 10).
 - No introduzcas dependencias, frameworks o servicios no aprobados.
 
 ## 3. Flujo SDD obligatorio

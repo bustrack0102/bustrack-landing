@@ -1,6 +1,6 @@
 # 03-migracion-de-razor-a-angular — Migración de Razor Pages a Angular
 
-> Repositorio: BusTrack Landing · Estado: Pendiente · Fecha: 2026-10-30.
+> Repositorio: BusTrack Landing · Estado: Implementado (React SPA) · Fecha: 2026-11-11.
 
 ## 1. Objetivo
 
@@ -60,3 +60,11 @@ Razor tiene login, logout, home protegida, Denegado y Error. Angular no existe.
 - Plan: `plan.md` · Tareas: `task.md` · Diagramas: `chart.md`.
 - Estado real: `../../Memoria.md`.
 - Contratos: `../../docs/contratos-integracion.md`.
+
+> **Nota de evolución (constitution.md v3.0.0):** El portal web público fue implementado finalmente sobre **React 19 + TypeScript + Vite + Tailwind CSS**, cumpliendo todos los criterios funcionales y de seguridad de esta especificación.
+
+## Aprobación
+
+- [x] Revisión funcional y WCAG 2.1 AA completada — fecha: 2026-11-11
+- [x] CHECKLIST_PR.md validado
+- [x] Sin conflicto con constitution.md

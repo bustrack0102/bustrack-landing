@@ -1,6 +1,6 @@
 # 10-accesibilidad — Accesibilidad del portal
 
-> Repositorio: BusTrack Landing · Estado: Pendiente · Fecha: 2026-10-30.
+> Repositorio: BusTrack Landing · Estado: Implementado · Fecha: 2026-11-11.
 
 ## 1. Objetivo
 
@@ -60,3 +60,9 @@ No hay auditoría de accesibilidad documentada.
 - Plan: `plan.md` · Tareas: `task.md` · Diagramas: `chart.md`.
 - Estado real: `../../Memoria.md`.
 - Contratos: `../../docs/contratos-integracion.md`.
+
+## Aprobación
+
+- [x] Revisión funcional y WCAG 2.1 AA completada — fecha: 2026-11-11
+- [x] CHECKLIST_PR.md validado
+- [x] Sin conflicto con constitution.md

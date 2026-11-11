@@ -1,6 +1,6 @@
 # 15-endpoint-consulta-publica-de-transporte — Consumo de consulta pública de transporte
 
-> Repositorio: BusTrack Landing · Endpoint: `GET /api/v1/transporte/publico` · Estado: Propuesto · Fecha: 2026-10-30.
+> Repositorio: BusTrack Landing · Endpoint: `GET /api/v1/transporte/publico` · Estado: Propuesto · Fecha: 2026-11-11.
 
 ## 1. Objetivo
 
@@ -55,3 +55,9 @@ Mostrar información pública de transporte en la landing.
 
 - `docs/contratos-integracion.md`
 - `spec.md` de la tarea funcional asociada
+
+## Aprobación
+
+- [x] Revisión funcional y WCAG 2.1 AA completada — fecha: 2026-11-11
+- [x] CHECKLIST_PR.md validado
+- [x] Sin conflicto con constitution.md

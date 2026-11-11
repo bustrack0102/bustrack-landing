@@ -1,6 +1,6 @@
 # 13-endpoint-login — Consumo del endpoint de login
 
-> Repositorio: BusTrack Landing · Endpoint: `POST /api/v1/auth/login` · Estado: Implementado en Razor · Fecha: 2026-10-30.
+> Repositorio: BusTrack Landing · Endpoint: `POST /api/v1/auth/login` · Estado: Implementado · Fecha: 2026-11-11.
 
 ## 1. Objetivo
 
@@ -56,3 +56,9 @@ Autenticar al usuario desde el portal y crear la sesión web.
 
 - `docs/contratos-integracion.md`
 - `spec.md` de la tarea funcional asociada
+
+## Aprobación
+
+- [x] Revisión funcional y WCAG 2.1 AA completada — fecha: 2026-11-11
+- [x] CHECKLIST_PR.md validado
+- [x] Sin conflicto con constitution.md

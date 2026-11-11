@@ -1,6 +1,6 @@
 # 14-endpoint-logout — Consumo del endpoint de logout
 
-> Repositorio: BusTrack Landing · Endpoint: `POST /api/v1/auth/logout` · Estado: Implementado en Razor · Fecha: 2026-10-30.
+> Repositorio: BusTrack Landing · Endpoint: `POST /api/v1/auth/logout` · Estado: Implementado · Fecha: 2026-11-11.
 
 ## 1. Objetivo
 
@@ -55,3 +55,9 @@ Revocar el token y cerrar la sesión del portal.
 
 - `docs/contratos-integracion.md`
 - `spec.md` de la tarea funcional asociada
+
+## Aprobación
+
+- [x] Revisión funcional y WCAG 2.1 AA completada — fecha: 2026-11-11
+- [x] CHECKLIST_PR.md validado
+- [x] Sin conflicto con constitution.md
