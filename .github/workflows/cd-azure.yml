@@ -42,6 +42,7 @@ jobs:
           ACR_LOGIN_SERVER=$(az acr show -n $ACR_NAME --query loginServer -o tsv)
           ACR_USERNAME=$(az acr credential show -n $ACR_NAME --query username -o tsv)
           ACR_PASSWORD=$(az acr credential show -n $ACR_NAME --query passwords[0].value -o tsv)
+          echo "::add-mask::$ACR_PASSWORD"
           echo "$ACR_PASSWORD" | docker login "$ACR_LOGIN_SERVER" --username "$ACR_USERNAME" --password-stdin
           SHORT_SHA="${GITHUB_SHA::12}"
           TAG="${ACR_LOGIN_SERVER%/}/bustrack-landing:0.2.0-${SHORT_SHA}"
@@ -56,6 +57,7 @@ jobs:
 
       - name: Deploy bustrack-landing container (transición hasta SWA)
         run: |
+          az container delete --resource-group rg-bustrack-ncus --name bustrack-landing --yes -o none || true
           az container create \
             --resource-group rg-bustrack-ncus \
             --name bustrack-landing \
