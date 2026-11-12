@@ -131,6 +131,14 @@ export const Footer: React.FC = () => {
                 </Link>
               </li>
               <li>
+                <Link
+                  to="/manejo-datos"
+                  className="transition hover:text-white hover:underline underline-offset-4"
+                >
+                  Manejo de Datos
+                </Link>
+              </li>
+              <li>
                 <span className="text-neutral-400">Sin rastreo GPS de usuarios</span>
               </li>
               <li>

@@ -35,7 +35,7 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Build and push Nginx landing image to ACR
+      - name: Build and push Nginx landing image to ACR (SemVer 0.9.0)
         run: |
           ACR_NAME=bustrackacr0102
           az acr update --name "$ACR_NAME" --admin-enabled true -o none
@@ -44,10 +44,19 @@ jobs:
           ACR_PASSWORD=$(az acr credential show -n $ACR_NAME --query passwords[0].value -o tsv)
           echo "::add-mask::$ACR_PASSWORD"
           echo "$ACR_PASSWORD" | docker login "$ACR_LOGIN_SERVER" --username "$ACR_USERNAME" --password-stdin
+
+          API_FQDN=$(az containerapp show -g rg-bustrack-ncus -n bustrack-api --query "properties.configuration.ingress.fqdn" -o tsv 2>/dev/null || echo "")
+          API_BASE_URL="${API_FQDN:+https://${API_FQDN}}"
+          API_BASE_URL="${API_BASE_URL:-http://localhost:8000}"
+
           SHORT_SHA="${GITHUB_SHA::12}"
-          TAG="${ACR_LOGIN_SERVER%/}/bustrack-landing:0.2.0-${SHORT_SHA}"
+          TAG="${ACR_LOGIN_SERVER%/}/bustrack-landing:0.9.0-${SHORT_SHA}"
           TAG_LATEST="${ACR_LOGIN_SERVER%/}/bustrack-landing:latest"
-          docker build -t "$TAG" -t "$TAG_LATEST" -f Dockerfile .
+          docker build \
+            --build-arg "VITE_API_BASE_URL=${API_BASE_URL}" \
+            --build-arg "VITE_GA_MEASUREMENT_ID=${{ vars.VITE_GA_MEASUREMENT_ID }}" \
+            --build-arg "VITE_PLAY_STORE_URL=${{ vars.VITE_PLAY_STORE_URL }}" \
+            -t "$TAG" -t "$TAG_LATEST" -f Dockerfile .
           docker push "$TAG"
           docker push "$TAG_LATEST"
           echo "IMAGE_TAG=$TAG" >> $GITHUB_ENV
@@ -55,23 +64,30 @@ jobs:
           echo "ACR_USERNAME=$ACR_USERNAME" >> $GITHUB_ENV
           echo "ACR_PASSWORD=$ACR_PASSWORD" >> $GITHUB_ENV
 
-      - name: Deploy bustrack-landing container (transición hasta SWA)
+      - name: Deploy bustrack-landing (Azure Container App HTTPS or ACI fallback)
         run: |
-          az container delete --resource-group rg-bustrack-ncus --name bustrack-landing --yes -o none || true
-          az container create \
-            --resource-group rg-bustrack-ncus \
-            --name bustrack-landing \
-            --image "$IMAGE_TAG" \
-            --registry-login-server "$ACR_LOGIN_SERVER" \
-            --registry-username "$ACR_USERNAME" \
-            --registry-password "$ACR_PASSWORD" \
-            --dns-name-label bustrack-landing-uttt \
-            --ports 8080 \
-            --os-type Linux \
-            --cpu 0.5 \
-            --memory 1.0 -o none
+          if az containerapp show -g rg-bustrack-ncus -n bustrack-landing -o none 2>/dev/null; then
+            az containerapp update -g rg-bustrack-ncus -n bustrack-landing --image "$IMAGE_TAG" -o none
+            FQDN=$(az containerapp show -g rg-bustrack-ncus -n bustrack-landing --query "properties.configuration.ingress.fqdn" -o tsv)
+            TARGET_URL="https://${FQDN}/health"
+          else
+            az container delete --resource-group rg-bustrack-ncus --name bustrack-landing --yes -o none || true
+            az container create \
+              --resource-group rg-bustrack-ncus \
+              --name bustrack-landing \
+              --image "$IMAGE_TAG" \
+              --registry-login-server "$ACR_LOGIN_SERVER" \
+              --registry-username "$ACR_USERNAME" \
+              --registry-password "$ACR_PASSWORD" \
+              --dns-name-label bustrack-landing-uttt \
+              --ports 8080 \
+              --os-type Linux \
+              --cpu 0.5 \
+              --memory 1.0 -o none
+            TARGET_URL="http://bustrack-landing-uttt.northcentralus.azurecontainer.io:8080/health"
+          fi
           for i in $(seq 1 20); do
-            CODE=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 http://bustrack-landing-uttt.northcentralus.azurecontainer.io:8080/health || echo "000")
+            CODE=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 "$TARGET_URL" || echo "000")
             [ "$CODE" -eq 200 ] && exit 0
             sleep 8
           done

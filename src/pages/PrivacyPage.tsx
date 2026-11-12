@@ -5,13 +5,19 @@ import { Link } from 'react-router-dom';
 export const PrivacyPage: React.FC = () => {
   return (
     <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8 bg-[#fbf9f8]">
-      <div className="mb-6">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
         <Link
           to="/"
           className="inline-flex items-center gap-2 text-sm font-bold text-[#cf1b1b] hover:text-[#900d0d]"
         >
           <ArrowLeft className="h-4 w-4" />
           <span>Volver al inicio</span>
+        </Link>
+        <Link
+          to="/manejo-datos"
+          className="text-xs font-bold text-[#1b1c1c] underline underline-offset-4 hover:text-[#cf1b1b]"
+        >
+          Política de Manejo de Datos
         </Link>
       </div>
 

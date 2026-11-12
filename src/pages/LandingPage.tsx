@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import { appConfig } from '../core/config/env';
+import { initAnalyticsIfConsented, trackPlayStoreClick } from '../core/analytics/gtag';
+import { fetchCatalogStatusWithCache, CatalogStatusSnapshot } from '../core/cache/publicStatusCache';
 import {
   Smartphone,
   ShieldCheck,
@@ -382,8 +385,27 @@ export const LandingPage: React.FC = () => {
   // Architecture Tabs State
   const [activeArchStage, setActiveArchStage] = useState(ARCHITECTURE_STAGES[0].id);
 
-  // Privacy Telemetry State
+  // Privacy Telemetry State + Public Catalog SWR Cache
   const [cookieConsent, setCookieConsent] = useState<boolean | null>(null);
+  const [catalogStatus, setCatalogStatus] = useState<CatalogStatusSnapshot | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    fetchCatalogStatusWithCache().then((snap) => {
+      if (active && snap) {
+        setCatalogStatus(snap);
+      }
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (cookieConsent === true) {
+      initAnalyticsIfConsented(appConfig.gaMeasurementId, true);
+    }
+  }, [cookieConsent]);
 
   /* ------------------------------------------------------------------------ */
   /* INTEGRATED ANIMATION STATES & HOOKE'S SPRING PHYSICS REFS                */
@@ -2358,20 +2380,43 @@ export const LandingPage: React.FC = () => {
 
               {/* White Google Play Pill CTA */}
               <div className="mt-8 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
-                <div className="inline-flex items-center gap-3.5 rounded-2xl bg-white px-7 py-4 text-neutral-900 shadow-2xl transition-all duration-300 hover:scale-105 hover:shadow-white/20">
-                  <Smartphone className="h-7 w-7 text-[#cf1b1b]" />
-                  <div className="text-left">
-                    <div className="text-[10px] font-bold uppercase tracking-wider text-neutral-500">
-                      Próximamente en
+                {appConfig.playStoreUrl ? (
+                  <a
+                    href={appConfig.playStoreUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => trackPlayStoreClick('landing_banner')}
+                    aria-label="Descargar BusTrack en Google Play"
+                    className="inline-flex items-center gap-3.5 rounded-2xl bg-white px-7 py-4 text-neutral-900 shadow-2xl transition-all duration-300 hover:scale-105 hover:shadow-white/20"
+                  >
+                    <Smartphone className="h-7 w-7 text-[#cf1b1b]" />
+                    <div className="text-left">
+                      <div className="text-[10px] font-bold uppercase tracking-wider text-neutral-500">
+                        Disponible en
+                      </div>
+                      <div className="text-lg font-black text-[#1b1c1c]">
+                        Google Play
+                      </div>
                     </div>
-                    <div className="text-lg font-black text-[#1b1c1c]">
-                      Google Play
+                  </a>
+                ) : (
+                  <div className="inline-flex items-center gap-3.5 rounded-2xl bg-white px-7 py-4 text-neutral-900 shadow-2xl transition-all duration-300 hover:scale-105 hover:shadow-white/20">
+                    <Smartphone className="h-7 w-7 text-[#cf1b1b]" />
+                    <div className="text-left">
+                      <div className="text-[10px] font-bold uppercase tracking-wider text-neutral-500">
+                        Próximamente en
+                      </div>
+                      <div className="text-lg font-black text-[#1b1c1c]">
+                        Google Play
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
 
                 <span className="text-xs text-rose-200">
-                  El enlace oficial se habilitará al publicarse la aplicación en la tienda.
+                  {appConfig.playStoreUrl
+                    ? `Versión catálogo activa: ${catalogStatus?.versionCatalogo ?? 'v0.9.0'}`
+                    : 'El enlace oficial se habilitará al publicarse la aplicación en la tienda.'}
                 </span>
               </div>
             </div>
