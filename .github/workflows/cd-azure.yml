@@ -9,66 +9,68 @@ permissions:
   contents: read
 
 jobs:
-  deploy-azure:
+  verify:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js 22
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '22'
-
-      - name: Install and build React production bundle
-        run: |
-          npm install
+      - run: |
+          npm ci
+          npm run typecheck
           npm run build
+          npm test
+          pwsh -File scripts/check_sdd.ps1
+      - uses: semgrep/semgrep-action@v1
+        with:
+          config: .semgrep/rules/semgrep.yaml
 
-      - name: Azure Login
-        uses: azure/login@v2
+  deploy-azure:
+    needs: [verify]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Restart Azure Container Instance to pull and build latest main
+      - name: Build and push Nginx landing image to ACR
         run: |
-          echo "Reiniciando contenedor bustrack-landing en Azure (rg-bustrack-ncus)..."
-          az container restart --resource-group rg-bustrack-ncus --name bustrack-landing
+          ACR_NAME=bustrackacr0102
+          az acr update --name "$ACR_NAME" --admin-enabled true -o none
+          ACR_LOGIN_SERVER=$(az acr show -n $ACR_NAME --query loginServer -o tsv)
+          ACR_USERNAME=$(az acr credential show -n $ACR_NAME --query username -o tsv)
+          ACR_PASSWORD=$(az acr credential show -n $ACR_NAME --query passwords[0].value -o tsv)
+          echo "$ACR_PASSWORD" | docker login "$ACR_LOGIN_SERVER" --username "$ACR_USERNAME" --password-stdin
+          SHORT_SHA="${GITHUB_SHA::12}"
+          TAG="${ACR_LOGIN_SERVER%/}/bustrack-landing:0.2.0-${SHORT_SHA}"
+          TAG_LATEST="${ACR_LOGIN_SERVER%/}/bustrack-landing:latest"
+          docker build -t "$TAG" -t "$TAG_LATEST" -f Dockerfile .
+          docker push "$TAG"
+          docker push "$TAG_LATEST"
+          echo "IMAGE_TAG=$TAG" >> $GITHUB_ENV
+          echo "ACR_LOGIN_SERVER=$ACR_LOGIN_SERVER" >> $GITHUB_ENV
+          echo "ACR_USERNAME=$ACR_USERNAME" >> $GITHUB_ENV
+          echo "ACR_PASSWORD=$ACR_PASSWORD" >> $GITHUB_ENV
 
-      - name: Smoke Test & Health Check Probe
+      - name: Deploy bustrack-landing container (transición hasta SWA)
         run: |
-          LANDING_URL="http://bustrack-landing-uttt.northcentralus.azurecontainer.io:8000"
-          echo "Verificando disponibilidad de la Landing en $LANDING_URL..."
-          MAX_RETRIES=15
-          DELAY=5
-          HEALTHY=0
-
-          for i in $(seq 1 $MAX_RETRIES); do
-            echo "Intento $i/$MAX_RETRIES: Consultando $LANDING_URL..."
-            STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 "$LANDING_URL" || echo "000")
-            if [ "$STATUS_CODE" -eq 200 ]; then
-              echo "✅ Landing page respondió con 200 OK!"
-              HEALTHY=1
-              break
-            fi
-            echo "El contenedor aún está iniciando (código HTTP $STATUS_CODE). Esperando ${DELAY}s..."
-            sleep $DELAY
+          az container create \
+            --resource-group rg-bustrack-ncus \
+            --name bustrack-landing \
+            --image "$IMAGE_TAG" \
+            --registry-login-server "$ACR_LOGIN_SERVER" \
+            --registry-username "$ACR_USERNAME" \
+            --registry-password "$ACR_PASSWORD" \
+            --dns-name-label bustrack-landing-uttt \
+            --ports 8080 \
+            --os-type Linux \
+            --cpu 0.5 \
+            --memory 1.0 -o none
+          for i in $(seq 1 20); do
+            CODE=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 http://bustrack-landing-uttt.northcentralus.azurecontainer.io:8080/health || echo "000")
+            [ "$CODE" -eq 200 ] && exit 0
+            sleep 8
           done
-
-          if [ "$HEALTHY" -ne 1 ]; then
-            echo "❌ Error: La landing page no respondió 200 OK tras $((MAX_RETRIES * DELAY)) segundos."
-            exit 1
-          fi
-
-      - name: Generate Deployment Summary
-        if: always()
-        run: |
-          echo "### 🚀 Resumen de Despliegue de Landing Page en Azure" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "| Propiedad | Detalle |" >> $GITHUB_STEP_SUMMARY
-          echo "|---|---|" >> $GITHUB_STEP_SUMMARY
-          echo "| **Estado** | 🟢 Exitoso |" >> $GITHUB_STEP_SUMMARY
-          echo "| **Resource Group** | \`rg-bustrack-ncus\` |" >> $GITHUB_STEP_SUMMARY
-          echo "| **Contenedor** | \`bustrack-landing\` |" >> $GITHUB_STEP_SUMMARY
-          echo "| **Región** | North Central US |" >> $GITHUB_STEP_SUMMARY
-          echo "| **URL Pública** | [bustrack-landing-uttt](http://bustrack-landing-uttt.northcentralus.azurecontainer.io:8000) |" >> $GITHUB_STEP_SUMMARY
+          exit 1

@@ -17,3 +17,4 @@
 - **Spec 10 y 11 (Accesibilidad y Analítica):** Etiquetas ARIA, navegación por teclado y suite automatizada `tests/WCAGAccessibility.test.tsx`.
 - **Specs 04, 05, 13 y 14 (Autenticación y Sesiones):** Login (`/login`), Panel protegido (`/panel`), Acceso denegado (`/denegado`) y Logout con limpieza local garantizada.
 - **Pruebas:** 20 casos de prueba automatizados con Vitest + React Testing Library (`authService.test.ts`, `LandingAndAuth.test.tsx`, `WCAGAccessibility.test.tsx`) + puerta SDD (`scripts/check_sdd.ps1`).
+- **2026-11-11 (Etapa 0 — v0.2.0 SemVer y CD ACR real):** agregada `docs/versionamiento.md` y actualizado `.github/workflows/cd-azure.yml` para construir la imagen Nginx real (`Dockerfile` + `docker/nginx.conf`) y publicarla en `bustrackacr0102`. Verificado local: `npm run typecheck`, `npm test` (20/20), `check_sdd.ps1` (`SDD-OK`).
