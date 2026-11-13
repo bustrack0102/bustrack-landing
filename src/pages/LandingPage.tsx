@@ -643,6 +643,84 @@ export const LandingPage: React.FC = () => {
   return (
     <div id="contenido-principal" className="min-h-screen bg-[#0c0e12] text-neutral-100 selection:bg-[#cf1b1b] selection:text-white">
       {/* -------------------------------------------------------------------- */}
+      {/* 0. CINEMATIC HERO SHOWCASE — IMAGEN EDITORIAL CON VIDEO DE FONDO     */}
+      {/* -------------------------------------------------------------------- */}
+      <section id="hero-cinematic" aria-label="BusTrack Portada Principal" className="relative w-full min-h-[92vh] flex items-end justify-start overflow-hidden bg-slate-950 border-b border-neutral-800">
+        {/* Background video / image fallback */}
+        <div className="absolute inset-0 z-0 overflow-hidden">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            poster="/hero-landing.jpg"
+            className="w-full h-full object-cover object-center filter brightness-[0.92]"
+            aria-hidden="true"
+          >
+            <source src="/hero-video.mp4" type="video/mp4" />
+          </video>
+          {/* Subtle gradient overlays for pristine readability */}
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-slate-950/20" aria-hidden="true" />
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-950/85 via-slate-950/40 to-transparent" aria-hidden="true" />
+        </div>
+
+        {/* Content Container */}
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16 lg:pb-24">
+          {/* Top Logo Badge */}
+          <div className="mb-6 inline-flex items-center gap-3 rounded-full bg-white/95 px-5 py-2.5 shadow-xl backdrop-blur-md">
+            <span className="h-4 w-4 rounded-full bg-[#cf1b1b]" aria-hidden="true" />
+            <span className="font-display font-extrabold text-slate-900 text-lg tracking-tight">BusTrack</span>
+          </div>
+
+          <div className="max-w-2xl">
+            {/* Tagline Pill */}
+            <div className="inline-flex items-center gap-2 rounded-full bg-[#cf1b1b] px-3.5 py-1 text-xs font-bold tracking-wider uppercase text-white shadow-md mb-4">
+              <span>Movilidad Urbana Inteligente</span>
+            </div>
+
+            {/* Main Headline */}
+            <div className="font-display text-4xl sm:text-6xl font-extrabold text-white tracking-tight leading-[1.08] drop-shadow-md">
+              Tu ruta, más clara.
+              <br />
+              <span className="text-white">Tu viaje, más fácil.</span>
+            </div>
+
+            {/* Subtitle / Context */}
+            <p className="mt-4 text-base sm:text-xl text-slate-200 leading-relaxed font-normal drop-shadow">
+              Conoce horarios precisos, paradas oficiales y la llegada del autobús en tiempo real. Muévete con certeza y tranquilidad todos los días, sin rastreo GPS invasivo.
+            </p>
+
+            {/* Actions */}
+            <div className="mt-8 flex flex-wrap items-center gap-4">
+              <a
+                href={appConfig.playStoreUrl || '#proximamente'}
+                onClick={() => trackPlayStoreClick('hero_cinematic_cta')}
+                className="inline-flex items-center gap-3 rounded-2xl bg-[#cf1b1b] hover:bg-[#b01414] px-6 py-4 text-sm font-bold text-white shadow-xl shadow-red-600/30 transition-all hover:scale-105 active:scale-95"
+              >
+                <Smartphone className="h-5 w-5" aria-hidden="true" />
+                <div className="text-left">
+                  <div className="text-sm font-bold leading-none">Instalar Aplicación</div>
+                  <div className="text-[11px] font-normal text-rose-200 mt-1 leading-none">Disponible para Android / Play Store</div>
+                </div>
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </a>
+
+              <a
+                href="#demo"
+                className="inline-flex items-center gap-2.5 rounded-2xl border-2 border-white/80 bg-slate-950/70 hover:bg-slate-900 px-6 py-4 text-sm font-bold text-white backdrop-blur-md transition-all hover:border-[#cf1b1b]"
+              >
+                <Search className="h-4 w-4 text-[#cf1b1b]" aria-hidden="true" />
+                <div className="text-left">
+                  <div className="text-sm font-bold leading-none">Explorar Rutas</div>
+                  <div className="text-[11px] font-normal text-slate-300 mt-1 leading-none">Consulta de Itinerarios Web</div>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* -------------------------------------------------------------------- */}
       {/* 1. HERO SECTION — VIBRANT 3D TRANSIT SHOWCASE                       */}
       {/* -------------------------------------------------------------------- */}
       <section id="inicio" className="relative min-h-[90vh] overflow-hidden pt-12 pb-24 lg:pt-20 lg:pb-32">
