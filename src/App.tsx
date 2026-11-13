@@ -22,10 +22,13 @@ const RouteAnalyticsTracker: React.FC = () => {
 };
 
 export const AppRoutes: React.FC = () => {
+  const location = useLocation();
+  const isHome = location.pathname === '/';
+
   return (
     <div className="flex min-h-screen flex-col bg-[#0c0e12] text-neutral-100">
       <RouteAnalyticsTracker />
-      <Navbar />
+      {!isHome && <Navbar />}
       <main className="flex-1">
         <Routes>
           <Route path="/" element={<LandingPage />} />
@@ -44,7 +47,7 @@ export const AppRoutes: React.FC = () => {
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
-      <Footer />
+      {!isHome && <Footer />}
     </div>
   );
 };

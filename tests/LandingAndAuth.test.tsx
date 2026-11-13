@@ -46,6 +46,8 @@ describe('BusTrack React Portal — Landing Urban Transit Pulse y Autenticación
       </MemoryRouter>
     );
 
+    fireEvent.click(screen.getByRole('button', { name: /Ver más/i }));
+
     // Click quick preset: Pachuca ↔ Mineral del Monte
     const pachucaBtn = screen.getByRole('button', { name: /Pachuca ↔ Mineral del Monte/i });
     fireEvent.click(pachucaBtn);
@@ -77,6 +79,8 @@ describe('BusTrack React Portal — Landing Urban Transit Pulse y Autenticación
       </MemoryRouter>
     );
 
+    fireEvent.click(screen.getByRole('button', { name: /Ver más/i }));
+
     // Switch Architecture Stage tab
     const stage3Btn = screen.getByRole('button', { name: /Etapa 3 · Machine Learning/i });
     fireEvent.click(stage3Btn);
@@ -100,6 +104,8 @@ describe('BusTrack React Portal — Landing Urban Transit Pulse y Autenticación
         <App />
       </MemoryRouter>
     );
+
+    fireEvent.click(screen.getByRole('button', { name: /Ver más/i }));
 
     // 1. Isla Dinámica en Hero
     const dynamicIsland = screen.getByTitle(/Toca para alternar la Isla Dinámica de Tránsito/i);
