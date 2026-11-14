@@ -357,90 +357,13 @@ const TEAM_MEMBERS: TeamMember[] = [
   },
 ];
 
-interface ShortScene {
-  id: string;
-  step: string;
-  tag: string;
-  label: string;
-  caption: string;
-  appBadge: string;
-  appRoute: string;
-  appEta: string;
-  mediaType: 'image' | 'video';
-  src: string;
-  poster?: string;
-  alt: string;
-}
-
-const SHORT_SCENES: ShortScene[] = [
-  {
-    id: 'walking',
-    step: '01',
-    tag: 'En camino a la parada',
-    label: 'Caminando y revisando tu ruta',
-    caption:
-      'Mientras caminas por tu colonia, confirmas al instante qué corredor pasa por la parada más cercana sin esperar a ciegas.',
-    appBadge: 'Sugerencia automática · Parada a 120 m',
-    appRoute: 'Corredor Centro ↔ Campus UTTT',
-    appEta: 'Siguiente unidad en 4 min',
-    mediaType: 'image',
-    src: '/scene-1-walking.jpg',
-    alt: 'Persona caminando por la banqueta consultando su ruta en BusTrack mientras se aproxima el autobús',
-  },
-  {
-    id: 'app-map',
-    step: '02',
-    tag: 'Contexto en pantalla',
-    label: 'Paradas y trazo en tu teléfono',
-    caption:
-      'Visualiza paradas oficiales, conexiones y tiempos de recorrido estimados en una interfaz clara y ligera.',
-    appBadge: 'Vista de corredor · Paradas verificadas',
-    appRoute: 'Tula Centro → Parque Industrial → UTTT',
-    appEta: 'Salida puntual · Tarifa $12.00 MXN',
-    mediaType: 'image',
-    src: '/scene-2-app-map.jpg',
-    alt: 'Usuario mirando en su teléfono el mapa interactivo de paradas y rutas de BusTrack',
-  },
-  {
-    id: 'bus-approaching',
-    step: '03',
-    tag: 'Unidad identificada',
-    label: 'Autobús UTTT acercándose',
-    caption:
-      'Anticipa el arribo de tu unidad con certeza y aborda en la parada correcta evitando retrasos inesperados.',
-    appBadge: 'Unidad #405 próxima a parada',
-    appRoute: 'Ruta Tula ↔ Campus UTTT (Expreso)',
-    appEta: 'Arribo estimado · 1 min',
-    mediaType: 'image',
-    src: '/scene-3-bus-uttt.jpg',
-    alt: 'Pasajero revisando BusTrack en su celular mientras el autobús blanco y rojo de la ruta UTTT llega a la parada',
-  },
-  {
-    id: 'short-video',
-    step: '04',
-    tag: 'Experiencia real',
-    label: 'Movilidad diaria sin estrés',
-    caption:
-      'De la incertidumbre en la banqueta a un traslado predecible: conoce horarios reales y viaja tranquilo todos los días.',
-    appBadge: 'Traslado asistido · Hidalgo',
-    appRoute: 'Cobertura regional UTTT · Tepeji · Pachuca',
-    appEta: 'Consulta sin rastreo GPS invasivo',
-    mediaType: 'video',
-    src: '/hero-video.mp4',
-    poster: '/hero-landing.jpg',
-    alt: 'Pasajeros esperando y abordando el autobús urbano con apoyo de la aplicación BusTrack',
-  },
-];
-
 /* -------------------------------------------------------------------------- */
 /* MAIN COMPONENT                                                             */
 /* -------------------------------------------------------------------------- */
 
 export const LandingPage: React.FC = () => {
-  // No-scroll 4-scene Short presentation state (default experience)
+  // No-scroll video-first presentation state (default experience)
   const [showInteractive, setShowInteractive] = useState(false);
-  const [activeScene, setActiveScene] = useState(0);
-  const [isShortPaused, setIsShortPaused] = useState(false);
 
   // Hero Interactive Route Switcher (Axis-style color & state morphing)
   const [heroMode, setHeroMode] = useState(HERO_ROUTE_MODES[0]);
@@ -468,16 +391,6 @@ export const LandingPage: React.FC = () => {
   // Privacy Telemetry State + Public Catalog SWR Cache
   const [cookieConsent, setCookieConsent] = useState<boolean | null>(null);
   const [catalogStatus, setCatalogStatus] = useState<CatalogStatusSnapshot | null>(null);
-
-  useEffect(() => {
-    if (showInteractive || isShortPaused) {
-      return;
-    }
-    const timer = window.setInterval(() => {
-      setActiveScene((prev) => (prev + 1) % SHORT_SCENES.length);
-    }, 4200);
-    return () => window.clearInterval(timer);
-  }, [showInteractive, isShortPaused]);
 
   useEffect(() => {
     let active = true;
@@ -730,120 +643,40 @@ export const LandingPage: React.FC = () => {
     };
   }, [isSimulatingTrip]);
 
-  const currentScene = SHORT_SCENES[activeScene] || SHORT_SCENES[0];
-
   if (!showInteractive) {
     return (
       <div
         id="contenido-principal"
         className="relative h-screen w-full overflow-hidden flex flex-col justify-between bg-slate-950 text-neutral-100 selection:bg-[#cf1b1b] selection:text-white"
       >
-        {/* Background 4-Scene Visual Short (Street Walking -> App Map -> Bus UTTT -> Video) */}
+        {/* Fullscreen Video Background */}
         <div className="absolute inset-0 z-0 overflow-hidden bg-slate-950">
-          {SHORT_SCENES.map((scene, idx) => {
-            const isActive = idx === activeScene;
-            const layerClasses = `absolute inset-0 w-full h-full object-cover object-center transition-all duration-1000 ease-out ${
-              isActive ? 'opacity-100 scale-[1.04]' : 'opacity-0 scale-100 pointer-events-none'
-            }`;
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            poster="/hero-landing.jpg"
+            className="absolute inset-0 w-full h-full object-cover object-center"
+            aria-hidden="true"
+          >
+            <source src="/hero-video.mp4" type="video/mp4" />
+          </video>
 
-            if (scene.mediaType === 'video') {
-              return (
-                <video
-                  key={scene.id}
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  poster={scene.poster}
-                  className={layerClasses}
-                  aria-hidden="true"
-                >
-                  <source src={scene.src} type="video/mp4" />
-                </video>
-              );
-            }
-
-            return (
-              <img
-                key={scene.id}
-                src={scene.src}
-                alt={scene.alt}
-                className={layerClasses}
-              />
-            );
-          })}
-
-          {/* Editorial Scrims ensuring WCAG contrast without hiding street/phone/bus subjects */}
+          {/* Subtle gradient scrims so the video remains the protagonist */}
           <div
-            className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-slate-950/40"
+            className="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-transparent to-slate-950/25"
             aria-hidden="true"
           />
           <div
-            className="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/50 to-slate-950/25"
+            className="absolute inset-0 bg-gradient-to-r from-slate-950/80 via-slate-950/30 to-transparent"
             aria-hidden="true"
           />
         </div>
 
-        {/* Top Header: Short Story Progress + Brand Nav */}
-        <header className="relative z-20 shrink-0 px-4 sm:px-8 pt-3 pb-1">
-          <div className="max-w-7xl mx-auto space-y-2.5">
-            {/* Segmented Short Progress Bars */}
-            <div className="flex items-center gap-3">
-              <div className="grid grid-cols-4 gap-1.5 flex-1" role="group" aria-label="Escenas de presentación BusTrack">
-                {SHORT_SCENES.map((scene, idx) => {
-                  const isActive = idx === activeScene;
-                  const isPast = idx < activeScene;
-                  return (
-                    <button
-                      key={scene.id}
-                      type="button"
-                      onClick={() => setActiveScene(idx)}
-                      aria-label={`Escena ${idx + 1}: ${scene.label}`}
-                      aria-pressed={isActive}
-                      className="group py-1 focus:outline-none"
-                    >
-                      <span className="block h-1 w-full rounded-full bg-white/25 overflow-hidden">
-                        <span
-                          className={`block h-full rounded-full transition-all duration-700 ${
-                            isActive
-                              ? 'w-full bg-[#ef4444]'
-                              : isPast
-                              ? 'w-full bg-white/80'
-                              : 'w-0 bg-white/60 group-hover:w-1/2'
-                          }`}
-                        />
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setIsShortPaused((prev) => !prev)}
-                aria-label={isShortPaused ? 'Reanudar historia visual' : 'Pausar historia visual'}
-                className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-slate-950/75 px-2.5 py-1 text-[11px] font-semibold text-slate-200 hover:border-white/40 hover:text-white transition"
-              >
-                {isShortPaused ? (
-                  <>
-                    <svg className="h-3 w-3" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                      <polygon points="6 4 20 12 6 20 6 4" />
-                    </svg>
-                    <span>Reanudar</span>
-                  </>
-                ) : (
-                  <>
-                    <svg className="h-3 w-3" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                      <rect x="6" y="4" width="4" height="16" />
-                      <rect x="14" y="4" width="4" height="16" />
-                    </svg>
-                    <span>Pausar</span>
-                  </>
-                )}
-              </button>
-            </div>
-
-            {/* Compact Brand Navigation */}
+        {/* Top Header: Brand Nav */}
+        <header className="relative z-20 shrink-0 px-4 sm:px-8 pt-4 pb-2">
+          <div className="max-w-7xl mx-auto">
             <nav aria-label="Navegación principal" className="flex items-center justify-between gap-4">
               <div className="flex items-center gap-3">
                 <div className="inline-flex items-center gap-2.5 rounded-full bg-white/95 px-3.5 py-1.5 shadow-lg">
@@ -857,7 +690,7 @@ export const LandingPage: React.FC = () => {
                     Bus<span className="text-[#cf1b1b]">Track</span>
                   </span>
                 </div>
-                <span className="hidden sm:inline-flex items-center rounded-full border border-white/15 bg-slate-950/65 px-3 py-1 text-[11px] font-medium text-slate-200 backdrop-blur-sm">
+                <span className="hidden sm:inline-flex items-center rounded-full border border-white/15 bg-slate-950/55 px-3 py-1 text-[11px] font-medium text-slate-200 backdrop-blur-sm">
                   Movilidad Inteligente en Hidalgo · UTTT
                 </span>
               </div>
@@ -865,7 +698,7 @@ export const LandingPage: React.FC = () => {
               <div className="flex items-center gap-2.5">
                 <Link
                   to="/login"
-                  className="inline-flex items-center rounded-full border border-white/25 bg-slate-950/70 hover:bg-slate-900 px-3.5 py-1.5 text-xs font-semibold text-white backdrop-blur-md transition"
+                  className="inline-flex items-center rounded-full border border-white/25 bg-slate-950/60 hover:bg-slate-900 px-3.5 py-1.5 text-xs font-semibold text-white backdrop-blur-md transition"
                 >
                   Acceso
                 </Link>
@@ -874,31 +707,27 @@ export const LandingPage: React.FC = () => {
           </div>
         </header>
 
-        {/* Center Viewport Showcase (Strictly fits 100vh without scrolling) */}
+        {/* Center Viewport Showcase (No scroll, video-focused) */}
         <section
           id="hero-short"
           aria-label="BusTrack Presentación Visual sin Scroll"
-          className="relative z-10 flex-1 min-h-0 flex items-center px-4 sm:px-8 py-2"
+          className="relative z-10 flex-1 min-h-0 flex items-end sm:items-center px-4 sm:px-8 pb-6 sm:pb-2"
         >
-          <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-8 items-center">
-            {/* Left Column: Slogan + Emotion + Direct Install CTA + Ver más */}
-            <div className="lg:col-span-7 space-y-3 sm:space-y-4">
-              <div className="inline-flex items-center gap-2 rounded-full bg-[#cf1b1b] px-3 py-1 text-[11px] font-bold tracking-wider uppercase text-white shadow-md">
-                <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" aria-hidden="true" />
-                <span>
-                  {currentScene.step} / 0{SHORT_SCENES.length} · {currentScene.tag}
-                </span>
-              </div>
+          <div className="max-w-7xl mx-auto w-full">
+            <div className="max-w-xl space-y-4">
+              <h2 className="sr-only">Experiencia de movilidad en tiempo real</h2>
 
-              <h1 className="font-display text-3xl sm:text-5xl xl:text-[3.35rem] font-extrabold text-white tracking-tight leading-[1.06] drop-shadow-md">
+              <h1 className="font-display text-3xl sm:text-5xl xl:text-[3.5rem] font-extrabold text-white tracking-tight leading-[1.06] drop-shadow-lg">
                 Tu ruta, más clara.{' '}
                 <span className="text-rose-400 block sm:inline">Tu viaje, más fácil.</span>
               </h1>
 
-              <p className="text-sm sm:text-base text-slate-200 max-w-xl leading-relaxed drop-shadow">
-                {currentScene.caption} Consulta tu traslado cotidiano en Hidalgo{' '}
+              <p className="text-sm sm:text-base text-slate-100 max-w-lg leading-relaxed drop-shadow">
+                Consulta rutas, paradas y tiempos de traslado en Hidalgo{' '}
                 <strong className="font-semibold text-white">sin rastreo GPS invasivo</strong>.
               </p>
+
+              <h2 className="sr-only">Descarga e instalación de BusTrack</h2>
 
               {/* Primary Install CTA + Interactive Mode Switch */}
               <div className="flex flex-wrap items-center gap-3 pt-1">
@@ -922,7 +751,7 @@ export const LandingPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setShowInteractive(true)}
-                  className="inline-flex items-center gap-2 rounded-xl border border-white/40 bg-slate-950/75 hover:bg-slate-900 hover:border-white px-5 py-3 text-sm font-bold text-white backdrop-blur-md transition"
+                  className="inline-flex items-center gap-2 rounded-xl border border-white/40 bg-slate-950/65 hover:bg-slate-900 hover:border-white px-5 py-3 text-sm font-bold text-white backdrop-blur-md transition"
                 >
                   <Search className="h-4 w-4 text-rose-400 shrink-0" aria-hidden="true" />
                   <span>Ver más</span>
@@ -930,70 +759,10 @@ export const LandingPage: React.FC = () => {
               </div>
 
               {!appConfig.playStoreUrl && (
-                <p className="text-[11px] sm:text-xs text-slate-300">
+                <p className="text-[11px] sm:text-xs text-slate-200 drop-shadow">
                   El enlace oficial se habilitará al publicarse la aplicación en la tienda.
                 </p>
               )}
-            </div>
-
-            {/* Right Column: Subtle Synchronized App Context Card */}
-            <div className="lg:col-span-5">
-              <div className="rounded-2xl border border-white/15 bg-slate-950/75 backdrop-blur-md p-4 sm:p-5 shadow-2xl space-y-3">
-                {/* Synchronized Live Phone Context Pill */}
-                <div className="rounded-xl border border-rose-500/30 bg-gradient-to-r from-[#cf1b1b]/25 to-slate-900/90 p-3 space-y-1">
-                  <div className="flex items-center justify-between text-[11px] font-semibold uppercase tracking-wide text-rose-300">
-                    <span>{currentScene.appBadge}</span>
-                    <span>
-                      {activeScene + 1}/{SHORT_SCENES.length}
-                    </span>
-                  </div>
-                  <div className="text-sm font-bold text-white">{currentScene.appRoute}</div>
-                  <div className="text-xs text-slate-300">{currentScene.appEta}</div>
-                </div>
-
-                {/* Subtle App Capability Context (3 Semantic H2s) */}
-                <div className="grid grid-cols-1 gap-2">
-                  <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2">
-                    <h2 className="text-xs sm:text-sm font-bold text-white">Ruta y Paradas Oficiales</h2>
-                    <p className="text-[11px] text-slate-300">
-                      Identifica recorridos verificados entre municipios y Campus UTTT sin desviaciones.
-                    </p>
-                  </div>
-                  <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2">
-                    <h2 className="text-xs sm:text-sm font-bold text-white">Horarios y Arribo en Tiempo Real</h2>
-                    <p className="text-[11px] text-slate-300">
-                      Planea tu caminata a la parada con tiempos estimados y salidas puntuales.
-                    </p>
-                  </div>
-                  <div className="rounded-xl border border-white/10 bg-white/5 px-3 py-2">
-                    <h2 className="text-xs sm:text-sm font-bold text-white">Tarifas Transparentes por Tramo</h2>
-                    <p className="text-[11px] text-slate-300">
-                      Conoce el pasaje exacto antes de abordar en cada corredor regional.
-                    </p>
-                  </div>
-                </div>
-
-                {/* Manual Scene Controls */}
-                <div className="flex items-center justify-between pt-1 text-xs text-slate-300">
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setActiveScene((prev) => (prev - 1 + SHORT_SCENES.length) % SHORT_SCENES.length)
-                    }
-                    className="rounded-lg border border-white/15 bg-white/5 hover:bg-white/15 px-2.5 py-1 font-medium text-white transition"
-                  >
-                    Anterior
-                  </button>
-                  <span className="truncate px-2 text-[11px] text-slate-300">{currentScene.label}</span>
-                  <button
-                    type="button"
-                    onClick={() => setActiveScene((prev) => (prev + 1) % SHORT_SCENES.length)}
-                    className="rounded-lg border border-white/15 bg-white/5 hover:bg-white/15 px-2.5 py-1 font-medium text-white transition"
-                  >
-                    Siguiente
-                  </button>
-                </div>
-              </div>
             </div>
           </div>
         </section>
