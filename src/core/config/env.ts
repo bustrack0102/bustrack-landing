@@ -15,6 +15,6 @@ export const appConfig: AppConfig = {
   genaiBaseUrl: rawGenaiUrl.replace(/\/+$/, ''),
   requestTimeoutMs: 15000,
   enableDemoAuth: (import.meta.env?.VITE_ENABLE_DEMO_AUTH ?? 'true') !== 'false',
-  gaMeasurementId: (import.meta.env?.VITE_GA_MEASUREMENT_ID ?? '').trim(),
+  gaMeasurementId: (import.meta.env?.VITE_GA_MEASUREMENT_ID || 'G-XX5FZKDF1B').trim(),
   playStoreUrl: (import.meta.env?.VITE_PLAY_STORE_URL ?? '').trim(),
 };
