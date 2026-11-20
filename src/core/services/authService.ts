@@ -256,3 +256,27 @@ export async function logoutFromApi(bearerValue?: string): Promise<boolean> {
     clearTimeout(timer);
   }
 }
+
+export async function deleteAccountFromApi(bearerValue?: string): Promise<boolean> {
+  if (!bearerValue || !bearerValue.trim()) {
+    return false;
+  }
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), appConfig.requestTimeoutMs);
+
+  try {
+    const response = await fetch(`${appConfig.apiBaseUrl}/api/v1/usuarios/me`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${bearerValue}`,
+      },
+      signal: controller.signal,
+    });
+    return response.ok;
+  } catch {
+    return false;
+  } finally {
+    clearTimeout(timer);
+  }
+}

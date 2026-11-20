@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import {
   ShieldCheck,
@@ -9,16 +9,38 @@ import {
   Clock,
   Layers,
   ArrowLeft,
+  Trash2,
+  AlertTriangle,
 } from 'lucide-react';
 import { useAuth } from '../core/context/AuthContext';
 
 export const DashboardPage: React.FC = () => {
-  const { session, logout } = useAuth();
+  const { session, logout, deleteAccount } = useAuth();
   const navigate = useNavigate();
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deletingAccount, setDeletingAccount] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   const handleLogout = async () => {
     await logout();
     navigate('/login', { replace: true });
+  };
+
+  const handleDeleteAccount = async () => {
+    setDeleteError(null);
+    setDeletingAccount(true);
+    try {
+      const deleted = await deleteAccount();
+      if (!deleted) {
+        setDeleteError('No pudimos eliminar la cuenta. Verifica tu conexión e inténtalo nuevamente.');
+        setShowDeleteConfirm(false);
+      }
+    } catch {
+      setDeleteError('Ocurrió un error inesperado al eliminar la cuenta.');
+      setShowDeleteConfirm(false);
+    } finally {
+      setDeletingAccount(false);
+    }
   };
 
   return (
@@ -98,6 +120,71 @@ export const DashboardPage: React.FC = () => {
           </ul>
         </div>
       </div>
+
+      <section className="mt-8 rounded-3xl border border-rose-200 bg-white p-6 shadow-sm">
+        <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+          <div>
+            <h2 className="flex items-center gap-2 text-base font-bold text-[#1b1c1c]">
+              <Trash2 className="h-4 w-4 text-[#cf1b1b]" aria-hidden="true" />
+              Eliminar cuenta permanentemente
+            </h2>
+            <p className="mt-1 max-w-2xl text-xs leading-relaxed text-neutral-600">
+              Esta acción anonimiza tu perfil, revoca tus sesiones activas y elimina tus datos asociados. No se puede deshacer.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              setDeleteError(null);
+              setShowDeleteConfirm(true);
+            }}
+            className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#cf1b1b] px-4 py-2.5 text-xs font-bold text-[#cf1b1b] transition hover:bg-[#fff0e8]"
+          >
+            <Trash2 className="h-4 w-4" aria-hidden="true" />
+            <span>Eliminar mi cuenta</span>
+          </button>
+        </div>
+
+        {showDeleteConfirm && (
+          <div
+            className="mt-5 rounded-2xl border border-rose-200 bg-[#fff5f5] p-5"
+            role="group"
+            aria-labelledby="delete-account-confirm-title"
+          >
+            <h3 id="delete-account-confirm-title" className="flex items-center gap-2 text-sm font-bold text-[#900d0d]">
+              <AlertTriangle className="h-4 w-4" aria-hidden="true" />
+              Confirmar eliminación definitiva
+            </h3>
+            <p className="mt-2 text-xs leading-relaxed text-neutral-700">
+              ¿Eliminar permanentemente la cuenta de <span className="font-bold">{session?.userName}</span> y todos sus datos? Esta acción es irreversible.
+            </p>
+            <div className="mt-4 flex flex-wrap gap-3">
+              <button
+                type="button"
+                onClick={handleDeleteAccount}
+                disabled={deletingAccount}
+                className="inline-flex items-center justify-center rounded-xl bg-[#cf1b1b] px-4 py-2 text-xs font-bold text-white transition hover:bg-[#900d0d] disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {deletingAccount ? 'Eliminando...' : 'Sí, eliminar permanentemente'}
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowDeleteConfirm(false)}
+                disabled={deletingAccount}
+                className="inline-flex items-center justify-center rounded-xl border border-neutral-300 bg-white px-4 py-2 text-xs font-bold text-[#1b1c1c] transition hover:bg-neutral-100 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        )}
+
+        {deleteError && (
+          <p role="alert" className="mt-4 text-xs font-semibold text-[#900d0d]">
+            {deleteError}
+          </p>
+        )}
+      </section>
 
       <div className="mt-8">
         <Link

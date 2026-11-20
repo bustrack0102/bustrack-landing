@@ -6,6 +6,7 @@ import {
   clearStoredSession,
   loginWithApi,
   logoutFromApi,
+  deleteAccountFromApi,
 } from '../src/core/services/authService';
 
 describe('AuthService — Contratos y Seguridad de Sesión', () => {
@@ -99,5 +100,24 @@ describe('AuthService — Contratos y Seguridad de Sesión', () => {
     const ok = await logoutFromApi('jwt-to-revoke');
     expect(ok).toBe(false);
     expect(loadStoredSession()).toBeNull();
+  });
+
+  it('elimina definitivamente la cuenta con Bearer y devuelve false si la red falla', async () => {
+    const fetchMock = vi
+      .spyOn(globalThis, 'fetch')
+      .mockResolvedValueOnce(new Response(null, { status: 204 }));
+
+    const ok = await deleteAccountFromApi('jwt-to-delete');
+    expect(ok).toBe(true);
+    expect(fetchMock).toHaveBeenCalledWith(
+      expect.stringContaining('/api/v1/usuarios/me'),
+      expect.objectContaining({
+        method: 'DELETE',
+        headers: { Authorization: 'Bearer jwt-to-delete' },
+      })
+    );
+
+    vi.spyOn(globalThis, 'fetch').mockRejectedValueOnce(new Error('Network down'));
+    expect(await deleteAccountFromApi('jwt-to-delete')).toBe(false);
   });
 });

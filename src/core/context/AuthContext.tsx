@@ -4,6 +4,7 @@ import {
   loadStoredSession,
   loginWithApi,
   logoutFromApi,
+  deleteAccountFromApi,
 } from '../services/authService';
 
 interface AuthContextValue {
@@ -11,6 +12,7 @@ interface AuthContextValue {
   isAuthenticated: boolean;
   login: (userName: string, credentialInput: string, rememberMe: boolean) => Promise<AuthResult>;
   logout: () => Promise<void>;
+  deleteAccount: () => Promise<boolean>;
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
@@ -35,6 +37,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     await logoutFromApi(activeBearer);
   }, [session]);
 
+  const deleteAccount = useCallback(async (): Promise<boolean> => {
+    const activeBearer = session?.bearerValue;
+    const deleted = await deleteAccountFromApi(activeBearer);
+    if (deleted) {
+      setSession(null);
+    }
+    return deleted;
+  }, [session]);
+
   return (
     <AuthContext.Provider
       value={{
@@ -42,6 +53,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isAuthenticated: Boolean(session),
         login,
         logout,
+        deleteAccount,
       }}
     >
       {children}
