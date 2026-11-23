@@ -696,19 +696,6 @@ export const LandingPage: React.FC = () => {
               </div>
 
               <div className="flex items-center gap-2.5">
-                <a
-                  href="https://www.facebook.com/share/1CfjGyzDY8/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="BusTrack en Facebook"
-                  title="BusTrack en Facebook"
-                  className="inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-slate-950/60 hover:bg-[#1877F2] hover:border-[#1877F2] px-3 py-1.5 text-xs font-semibold text-white backdrop-blur-md transition"
-                >
-                  <svg className="h-3.5 w-3.5 fill-current" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M22 12.07C22 6.49 17.52 2 12 2S2 6.49 2 12.07c0 5.02 3.66 9.18 8.44 9.93v-7.03H7.9v-2.9h2.54V9.85c0-2.51 1.49-3.9 3.78-3.9 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.44 2.9h-2.34V22c4.78-.75 8.44-4.91 8.44-9.93z" />
-                  </svg>
-                  <span className="hidden sm:inline">Facebook</span>
-                </a>
                 <Link
                   to="/login"
                   className="inline-flex items-center rounded-full border border-white/25 bg-slate-950/60 hover:bg-slate-900 px-3.5 py-1.5 text-xs font-semibold text-white backdrop-blur-md transition"
@@ -776,6 +763,27 @@ export const LandingPage: React.FC = () => {
                   El enlace oficial se habilitará al publicarse la aplicación en la tienda.
                 </p>
               )}
+
+              {/* Business Social Accounts */}
+              <div className="pt-1 flex items-center gap-3">
+                <a
+                  href="https://www.facebook.com/share/1CfjGyzDY8/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="BusTrack en Facebook"
+                  title="Síguenos en Facebook"
+                  className="inline-flex items-center gap-2.5 rounded-xl border border-white/25 bg-slate-950/65 hover:bg-[#1877F2]/90 hover:border-[#1877F2] px-3.5 py-2 text-sm font-semibold text-white backdrop-blur-md shadow-lg transition hover:scale-[1.03] active:scale-95"
+                >
+                  <svg className="h-7 w-7 shrink-0" viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="12" cy="12" r="10.5" fill="#1877F2" />
+                    <path
+                      fill="#FFFFFF"
+                      d="M15.4 12.6l.4-2.6h-2.5V8.3c0-.7.35-1.4 1.48-1.4H16V4.7s-1.05-.18-2.05-.18c-2.1 0-3.47 1.27-3.47 3.57V10H8.15v2.6h2.33v6.3c.47.07.95.11 1.44.11s.97-.04 1.44-.11v-6.3h2.04z"
+                    />
+                  </svg>
+                  <span>Facebook</span>
+                </a>
+              </div>
             </div>
           </div>
         </section>
