@@ -19,9 +19,23 @@ export const Footer: React.FC = () => {
             <p className="mt-2 text-xs text-neutral-400 leading-relaxed max-w-sm">
               Plataforma tecnológica de información y planificación de transporte público para el estado de Hidalgo. Desarrollada por estudiantes de la Universidad Tecnológica de Tula-Tepeji.
             </p>
-            <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-neutral-700 bg-neutral-800/80 px-3.5 py-1.5 text-xs text-neutral-300">
-              <MapPin className="h-3.5 w-3.5 text-[#cf1b1b]" />
-              <span>Región Tula-Tepeji & Pachuca · Hidalgo, México</span>
+            <div className="mt-5 flex flex-wrap items-center gap-2.5">
+              <div className="inline-flex items-center gap-2 rounded-full border border-neutral-700 bg-neutral-800/80 px-3.5 py-1.5 text-xs text-neutral-300">
+                <MapPin className="h-3.5 w-3.5 text-[#cf1b1b]" />
+                <span>Región Tula-Tepeji & Pachuca · Hidalgo, México</span>
+              </div>
+              <a
+                href="https://www.facebook.com/share/1CfjGyzDY8/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="BusTrack en Facebook"
+                className="inline-flex items-center gap-2 rounded-full border border-neutral-700 bg-neutral-800/80 hover:bg-[#1877F2] hover:border-[#1877F2] px-3.5 py-1.5 text-xs font-semibold text-neutral-200 hover:text-white transition"
+              >
+                <svg className="h-3.5 w-3.5 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M22 12.07C22 6.49 17.52 2 12 2S2 6.49 2 12.07c0 5.02 3.66 9.18 8.44 9.93v-7.03H7.9v-2.9h2.54V9.85c0-2.51 1.49-3.9 3.78-3.9 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.44 2.9h-2.34V22c4.78-.75 8.44-4.91 8.44-9.93z" />
+                </svg>
+                <span>Facebook</span>
+              </a>
             </div>
           </div>
 

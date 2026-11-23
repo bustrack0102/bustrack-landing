@@ -696,6 +696,19 @@ export const LandingPage: React.FC = () => {
               </div>
 
               <div className="flex items-center gap-2.5">
+                <a
+                  href="https://www.facebook.com/share/1CfjGyzDY8/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="BusTrack en Facebook"
+                  title="BusTrack en Facebook"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-slate-950/60 hover:bg-[#1877F2] hover:border-[#1877F2] px-3 py-1.5 text-xs font-semibold text-white backdrop-blur-md transition"
+                >
+                  <svg className="h-3.5 w-3.5 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M22 12.07C22 6.49 17.52 2 12 2S2 6.49 2 12.07c0 5.02 3.66 9.18 8.44 9.93v-7.03H7.9v-2.9h2.54V9.85c0-2.51 1.49-3.9 3.78-3.9 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.44 2.9h-2.34V22c4.78-.75 8.44-4.91 8.44-9.93z" />
+                  </svg>
+                  <span className="hidden sm:inline">Facebook</span>
+                </a>
                 <Link
                   to="/login"
                   className="inline-flex items-center rounded-full border border-white/25 bg-slate-950/60 hover:bg-slate-900 px-3.5 py-1.5 text-xs font-semibold text-white backdrop-blur-md transition"
@@ -777,6 +790,18 @@ export const LandingPage: React.FC = () => {
               </span>
             </div>
             <div className="flex items-center gap-4 shrink-0">
+              <a
+                href="https://www.facebook.com/share/1CfjGyzDY8/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Página oficial de BusTrack en Facebook"
+                className="inline-flex items-center gap-1.5 hover:text-white underline-offset-4 hover:underline"
+              >
+                <svg className="h-3.5 w-3.5 fill-current text-[#1877F2]" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M22 12.07C22 6.49 17.52 2 12 2S2 6.49 2 12.07c0 5.02 3.66 9.18 8.44 9.93v-7.03H7.9v-2.9h2.54V9.85c0-2.51 1.49-3.9 3.78-3.9 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.44 2.9h-2.34V22c4.78-.75 8.44-4.91 8.44-9.93z" />
+                </svg>
+                <span>Facebook</span>
+              </a>
               <Link to="/privacidad" className="hover:text-white underline-offset-4 hover:underline">
                 Privacidad
               </Link>
@@ -835,6 +860,18 @@ export const LandingPage: React.FC = () => {
             <span>← Volver a vista sin scroll</span>
           </button>
           <div className="flex items-center gap-3 text-xs">
+            <a
+              href="https://www.facebook.com/share/1CfjGyzDY8/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="BusTrack en Facebook"
+              className="inline-flex items-center gap-1.5 text-slate-300 hover:text-white"
+            >
+              <svg className="h-3.5 w-3.5 fill-current text-[#1877F2]" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M22 12.07C22 6.49 17.52 2 12 2S2 6.49 2 12.07c0 5.02 3.66 9.18 8.44 9.93v-7.03H7.9v-2.9h2.54V9.85c0-2.51 1.49-3.9 3.78-3.9 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.44 2.9h-2.34V22c4.78-.75 8.44-4.91 8.44-9.93z" />
+              </svg>
+              <span>Facebook</span>
+            </a>
             <Link to="/privacidad" className="text-slate-300 hover:text-white">
               Privacidad
             </Link>
