@@ -765,7 +765,7 @@ export const LandingPage: React.FC = () => {
               )}
 
               {/* Business Social Accounts */}
-              <div className="pt-1 flex items-center gap-3">
+              <div className="pt-1 flex flex-wrap items-center gap-3">
                 <a
                   href="https://www.facebook.com/share/1CfjGyzDY8/"
                   target="_blank"
@@ -782,6 +782,30 @@ export const LandingPage: React.FC = () => {
                     />
                   </svg>
                   <span>Facebook</span>
+                </a>
+
+                <a
+                  href="https://www.instagram.com/bustrack0102/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="BusTrack en Instagram"
+                  title="Síguenos en Instagram"
+                  className="inline-flex items-center gap-2.5 rounded-xl border border-white/25 bg-slate-950/65 hover:bg-gradient-to-tr hover:from-[#f58529]/90 hover:via-[#dd2a7b]/90 hover:to-[#8134af]/90 hover:border-pink-400 px-3.5 py-2 text-sm font-semibold text-white backdrop-blur-md shadow-lg transition hover:scale-[1.03] active:scale-95"
+                >
+                  <svg className="h-7 w-7 shrink-0" viewBox="0 0 24 24" aria-hidden="true">
+                    <defs>
+                      <linearGradient id="ig-grad-hero" x1="0%" y1="100%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="#F58529" />
+                        <stop offset="50%" stopColor="#DD2A7B" />
+                        <stop offset="100%" stopColor="#8134AF" />
+                      </linearGradient>
+                    </defs>
+                    <rect x="2" y="2" width="20" height="20" rx="6" fill="url(#ig-grad-hero)" />
+                    <rect x="6.5" y="6.5" width="11" height="11" rx="3.2" fill="none" stroke="#FFFFFF" strokeWidth="1.7" />
+                    <circle cx="12" cy="12" r="2.7" fill="none" stroke="#FFFFFF" strokeWidth="1.7" />
+                    <circle cx="15.6" cy="8.4" r="0.9" fill="#FFFFFF" />
+                  </svg>
+                  <span>Instagram</span>
                 </a>
               </div>
             </div>
@@ -809,6 +833,20 @@ export const LandingPage: React.FC = () => {
                   <path d="M22 12.07C22 6.49 17.52 2 12 2S2 6.49 2 12.07c0 5.02 3.66 9.18 8.44 9.93v-7.03H7.9v-2.9h2.54V9.85c0-2.51 1.49-3.9 3.78-3.9 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.44 2.9h-2.34V22c4.78-.75 8.44-4.91 8.44-9.93z" />
                 </svg>
                 <span>Facebook</span>
+              </a>
+              <a
+                href="https://www.instagram.com/bustrack0102/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Página oficial de BusTrack en Instagram"
+                className="inline-flex items-center gap-1.5 hover:text-white underline-offset-4 hover:underline"
+              >
+                <svg className="h-3.5 w-3.5 text-pink-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                  <rect x="3" y="3" width="18" height="18" rx="5" />
+                  <circle cx="12" cy="12" r="4" />
+                  <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+                </svg>
+                <span>Instagram</span>
               </a>
               <Link to="/privacidad" className="hover:text-white underline-offset-4 hover:underline">
                 Privacidad
@@ -879,6 +917,20 @@ export const LandingPage: React.FC = () => {
                 <path d="M22 12.07C22 6.49 17.52 2 12 2S2 6.49 2 12.07c0 5.02 3.66 9.18 8.44 9.93v-7.03H7.9v-2.9h2.54V9.85c0-2.51 1.49-3.9 3.78-3.9 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.44 2.9h-2.34V22c4.78-.75 8.44-4.91 8.44-9.93z" />
               </svg>
               <span>Facebook</span>
+            </a>
+            <a
+              href="https://www.instagram.com/bustrack0102/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="BusTrack en Instagram"
+              className="inline-flex items-center gap-1.5 text-slate-300 hover:text-white"
+            >
+              <svg className="h-3.5 w-3.5 text-pink-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                <rect x="3" y="3" width="18" height="18" rx="5" />
+                <circle cx="12" cy="12" r="4" />
+                <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+              </svg>
+              <span>Instagram</span>
             </a>
             <Link to="/privacidad" className="text-slate-300 hover:text-white">
               Privacidad

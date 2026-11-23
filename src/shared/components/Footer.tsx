@@ -36,6 +36,20 @@ export const Footer: React.FC = () => {
                 </svg>
                 <span>Facebook</span>
               </a>
+              <a
+                href="https://www.instagram.com/bustrack0102/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="BusTrack en Instagram"
+                className="inline-flex items-center gap-2 rounded-full border border-neutral-700 bg-neutral-800/80 hover:bg-gradient-to-tr hover:from-[#f58529] hover:via-[#dd2a7b] hover:to-[#8134af] hover:border-pink-400 px-3.5 py-1.5 text-xs font-semibold text-neutral-200 hover:text-white transition"
+              >
+                <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                  <rect x="3" y="3" width="18" height="18" rx="5" />
+                  <circle cx="12" cy="12" r="4" />
+                  <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+                </svg>
+                <span>Instagram</span>
+              </a>
             </div>
           </div>
 
