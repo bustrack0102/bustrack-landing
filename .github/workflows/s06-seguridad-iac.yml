@@ -1,0 +1,20 @@
+﻿name: Sec 06. Seguridad Nginx e IaC
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  iac-security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          grep -q "X-Frame-Options" docker/nginx.conf
+          grep -q "Strict-Transport-Security" public/staticwebapp.config.json

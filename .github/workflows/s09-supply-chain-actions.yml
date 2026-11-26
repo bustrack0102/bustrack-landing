@@ -1,0 +1,25 @@
+﻿name: Sec 09. Supply Chain e Integridad
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  supply-chain:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          pwsh -Command '
+            Get-ChildItem .github/workflows -Filter *.yml | ForEach-Object {
+              if ((Get-Content $_.FullName -Raw) -notmatch "permissions:") {
+                throw "Missing permissions in $($_.Name)"
+              }
+            }
+          '
