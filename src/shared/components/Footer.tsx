@@ -50,6 +50,18 @@ export const Footer: React.FC = () => {
                 </svg>
                 <span>Instagram</span>
               </a>
+              <a
+                href="https://www.youtube.com/channel/UC26CIPVIMoC6_vMuQS6QdLw"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="BusTrack en YouTube"
+                className="inline-flex items-center gap-2 rounded-full border border-neutral-700 bg-neutral-800/80 hover:bg-[#FF0000] hover:border-[#FF0000] px-3.5 py-1.5 text-xs font-semibold text-neutral-200 hover:text-white transition"
+              >
+                <svg className="h-3.5 w-3.5 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M21.8 8.001a2.75 2.75 0 0 0-1.94-1.95C18.15 5.6 12 5.6 12 5.6s-6.15 0-7.86.45A2.75 2.75 0 0 0 2.2 8.001C1.75 9.72 1.75 12 1.75 12s0 2.28.45 3.999a2.75 2.75 0 0 0 1.94 1.95C5.85 18.4 12 18.4 12 18.4s6.15 0 7.86-.451a2.75 2.75 0 0 0 1.94-1.95C22.25 14.28 22.25 12 22.25 12s0-2.28-.45-3.999ZM9.75 15.02V8.98L15.2 12l-5.45 3.02Z" />
+                </svg>
+                <span>YouTube</span>
+              </a>
             </div>
           </div>
 

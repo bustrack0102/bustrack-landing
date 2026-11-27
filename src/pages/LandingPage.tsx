@@ -807,6 +807,21 @@ export const LandingPage: React.FC = () => {
                   </svg>
                   <span>Instagram</span>
                 </a>
+
+                <a
+                  href="https://www.youtube.com/channel/UC26CIPVIMoC6_vMuQS6QdLw"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="BusTrack en YouTube"
+                  title="Síguenos en YouTube"
+                  className="inline-flex items-center gap-2.5 rounded-xl border border-white/25 bg-slate-950/65 hover:bg-[#FF0000]/90 hover:border-[#FF0000] px-3.5 py-2 text-sm font-semibold text-white backdrop-blur-md shadow-lg transition hover:scale-[1.03] active:scale-95"
+                >
+                  <svg className="h-7 w-7 shrink-0" viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="2" y="4.5" width="20" height="15" rx="4.2" fill="#FF0000" />
+                    <polygon points="10,8.8 16,12 10,15.2" fill="#FFFFFF" />
+                  </svg>
+                  <span>YouTube</span>
+                </a>
               </div>
             </div>
           </div>
@@ -847,6 +862,18 @@ export const LandingPage: React.FC = () => {
                   <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
                 </svg>
                 <span>Instagram</span>
+              </a>
+              <a
+                href="https://www.youtube.com/channel/UC26CIPVIMoC6_vMuQS6QdLw"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Canal oficial de BusTrack en YouTube"
+                className="inline-flex items-center gap-1.5 hover:text-white underline-offset-4 hover:underline"
+              >
+                <svg className="h-3.5 w-3.5 text-[#FF0000]" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M21.8 8.001a2.75 2.75 0 0 0-1.94-1.95C18.15 5.6 12 5.6 12 5.6s-6.15 0-7.86.45A2.75 2.75 0 0 0 2.2 8.001C1.75 9.72 1.75 12 1.75 12s0 2.28.45 3.999a2.75 2.75 0 0 0 1.94 1.95C5.85 18.4 12 18.4 12 18.4s6.15 0 7.86-.451a2.75 2.75 0 0 0 1.94-1.95C22.25 14.28 22.25 12 22.25 12s0-2.28-.45-3.999ZM9.75 15.02V8.98L15.2 12l-5.45 3.02Z" />
+                </svg>
+                <span>YouTube</span>
               </a>
               <Link to="/privacidad" className="hover:text-white underline-offset-4 hover:underline">
                 Privacidad
@@ -931,6 +958,18 @@ export const LandingPage: React.FC = () => {
                 <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
               </svg>
               <span>Instagram</span>
+            </a>
+            <a
+              href="https://www.youtube.com/channel/UC26CIPVIMoC6_vMuQS6QdLw"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="BusTrack en YouTube"
+              className="inline-flex items-center gap-1.5 text-slate-300 hover:text-white"
+            >
+              <svg className="h-3.5 w-3.5 text-[#FF0000]" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M21.8 8.001a2.75 2.75 0 0 0-1.94-1.95C18.15 5.6 12 5.6 12 5.6s-6.15 0-7.86.45A2.75 2.75 0 0 0 2.2 8.001C1.75 9.72 1.75 12 1.75 12s0 2.28.45 3.999a2.75 2.75 0 0 0 1.94 1.95C5.85 18.4 12 18.4 12 18.4s6.15 0 7.86-.451a2.75 2.75 0 0 0 1.94-1.95C22.25 14.28 22.25 12 22.25 12s0-2.28-.45-3.999ZM9.75 15.02V8.98L15.2 12l-5.45 3.02Z" />
+              </svg>
+              <span>YouTube</span>
             </a>
             <Link to="/privacidad" className="text-slate-300 hover:text-white">
               Privacidad
